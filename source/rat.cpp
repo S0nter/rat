@@ -61,19 +61,22 @@ void Parse(vector<vector<Token>> tokens)
     }
 }
 
-string Convert(vector<Token> tokens)
+string Convert(vector<vector<Token>> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
-    for (Token token : tokens)
+    for (vector<Token> line : tokens)
     {
-        if (token.type == Type::_exit)
+        for (Token token : line)
         {
-            output += "mov rax, 60\n";
-            output += "mov rdi, 0\n";
-            output += "syscall\n";
+            if (token.type == Type::_exit)
+            {
+                output += "mov rax, 60\n";
+                output += "mov rdi, 0\n";
+                output += "syscall\n";
+            }
         }
     }
     return output;
