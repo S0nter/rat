@@ -4,14 +4,14 @@ using namespace std;
 
 enum Type
 {
-    none,
-    exit,
-    number,
+    _none,
+    _exit,
+    _number,
 };
 
 struct Token
 {
-    Type type = Type::none;
+    Type type = Type::_none;
     int value = 0;
 };
 
@@ -42,11 +42,11 @@ Token AddToken(string buffer)
     Token token;
     if (buffer == "exit")
     {
-        token.type = Type::exit;
+        token.type = Type::_exit;
     }
     else
     {
-        token.type = Type::none;
+        token.type = Type::_none;
     }
     return token;
 }
@@ -59,7 +59,7 @@ string Convert(vector<Token> tokens)
     output += "_start:\n";
     for (Token token : tokens)
     {
-        if (token.type == Type::exit)
+        if (token.type == Type::_exit)
         {
             output += "mov rax, 60\n";
             output += "mov rdi, 0\n";
