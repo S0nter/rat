@@ -1,7 +1,6 @@
+using namespace std;
 #include <string>
 #include <vector>
-
-using namespace std;
 
 enum Type
 {
@@ -16,10 +15,18 @@ struct Token
     int value = 0;
 };
 
-void Compile(string text)
+Token AddToken(string buffer)
 {
-    vector<Token> tokens = Tokenize(text);
-    string output = Convert(tokens);
+    Token token;
+    if (buffer == "exit")
+    {
+        token.type = Type::_exit;
+    }
+    else
+    {
+        token.type = Type::_none;
+    }
+    return token;
 }
 
 vector<Token> Tokenize(string text)
@@ -38,19 +45,6 @@ vector<Token> Tokenize(string text)
     return tokens;
 }
 
-Token AddToken(string buffer)
-{
-    Token token;
-    if (buffer == "exit")
-    {
-        token.type = Type::_exit;
-    }
-    else
-    {
-        token.type = Type::_none;
-    }
-    return token;
-}
 
 string Convert(vector<Token> tokens)
 {
@@ -67,4 +61,12 @@ string Convert(vector<Token> tokens)
             output += "syscall\n";
         }
     }
+    return output;
+}
+
+string Compile(string text)
+{
+    vector<Token> tokens = Tokenize(text);
+    string output = Convert(tokens);
+    return output;
 }
