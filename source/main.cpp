@@ -22,7 +22,7 @@ int main(int argc, char* argv[])
     file.open("./" + name, ios_base::in);
     if (!file.is_open())
     {
-        cout << "Cannot open " << colors["red"] + name + colors["normal"] << endl;
+        cout << "Cannot open " << colors["red"] << "\"" name << "\"" << colors["normal"] << endl;
         return 1;
     }
     string content;
