@@ -1,12 +1,17 @@
 #include <iostream>
 #include <fstream>
 #include "rat.cpp"
+#include <map>
 
 using namespace std;
 
 int main(int argc, char* argv[])
 {
-    cout << argv[1] << endl;
+    std::map<string, string> colors = {
+        { "red", "\33[1;91m\"" },
+        { "normal", "\"\33[0m" }
+    };
+
     if (argc <= 1) {
         std::cout << "Usage: " << argv[0] <<" file.rat out" << endl;
         return 1;
@@ -17,7 +22,7 @@ int main(int argc, char* argv[])
     file.open("./" + name, ios_base::in);
     if (!file.is_open())
     {
-        cout << "Cannot open \33[1;91m\"" + name + "\"\33[0m" << endl;
+        cout << "Cannot open " << colors["red"] + name + colors["normal"] << endl;
         return 1;
     }
     string content;
@@ -31,10 +36,10 @@ int main(int argc, char* argv[])
     outputfile.open(argv[2], ios_base::out);
     if (!outputfile.is_open())
     {
-        cout << "Cannot open \33[1;91m\"" << argv[2] << "\"\33[0m" << endl;
+        cout << "Cannot open " << colors["red"] << argv[2] << colors["normal"] << endl;
         return 1;
     }
     outputfile << output;
     outputfile.close();
-    cout << "SUCCESS";
+    return 0;
 }
