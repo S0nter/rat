@@ -21,5 +21,13 @@ int main()
         content += line + '\n';
     file.close();
 
-    Compile(content);
+    string output = Compile(content);
+    fstream outputfile;
+    outputfile.open("./output.asm", ios_base::in);
+    if (!outputfile.is_open())
+    {
+        cout << "Cannot open \33[1;91m\"output.asm\"\33[0m" << endl;
+        return 1;
+    }
+    outputfile << output;
 }
