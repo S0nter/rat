@@ -56,7 +56,9 @@ vector<vector<Token>> Tokenize(string text)
 void Parse(vector<vector<Token>> tokens)
 {
     for (vector<Token> line : tokens)
+    {
         // do smth
+    }
 }
 
 string Convert(vector<Token> tokens)
