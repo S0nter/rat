@@ -8,8 +8,8 @@ using namespace std;
 int main(int argc, char* argv[])
 {
     std::map<string, string> colors = {
-        { "red", "\33[1;91m\"" },
-        { "normal", "\"\33[0m" }
+        { "red", "\33[1;91m" },
+        { "normal", "\33[0m" }
     };
 
     if (argc <= 1) {
@@ -36,7 +36,7 @@ int main(int argc, char* argv[])
     outputfile.open(argv[2], ios_base::out);
     if (!outputfile.is_open())
     {
-        cout << "Cannot open " << colors["red"] << argv[2] << colors["normal"] << endl;
+        cout << "Cannot open " << colors["red"] << "\"" argv[2] << "\"" << colors["normal"] << endl;
         return 1;
     }
     outputfile << output;
