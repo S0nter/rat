@@ -30,7 +30,7 @@ Token AddToken(string buffer)
     return token;
 }
 
-vector<Token> Tokenize(string text)
+vector<vector<Token>> Tokenize(string text)
 {
     vector<vector<Token>> tokens;
     int line = 0;
@@ -53,6 +53,11 @@ vector<Token> Tokenize(string text)
     return tokens;
 }
 
+void Parse(vector<vector<Token>> tokens)
+{
+    for (vector<Token> line : tokens)
+        // do smth
+}
 
 string Convert(vector<Token> tokens)
 {
@@ -74,7 +79,8 @@ string Convert(vector<Token> tokens)
 
 string Compile(string text)
 {
-    vector<Token> tokens = Tokenize(text);
+    vector<vector<Token>> tokens = Tokenize(text);
+    Parse(tokens);
     string output = Convert(tokens);
     return output;
 }
