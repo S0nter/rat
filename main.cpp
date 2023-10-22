@@ -30,4 +30,5 @@ int main()
         return 1;
     }
     outputfile << output;
+    cout << "SUCCESS";
 }
