@@ -1,7 +1,8 @@
-using namespace std;
 #include <iostream>
 #include <fstream>
-#include "./rat.cpp"
+#include "rat.cpp"
+
+using namespace std;
 
 int main()
 {
