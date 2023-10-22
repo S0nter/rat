@@ -13,7 +13,7 @@ int main(int argc, char* argv[])
     };
 
     if (argc <= 1) {
-        std::cout << "Usage: " << argv[0] <<" file.rat out" << endl;
+        std::cout << "Usage: " << argv[0] << " file.rat out" << endl;
         return 1;
     }
     string name(argv[1]);
