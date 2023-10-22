@@ -1,2 +1,2 @@
 # rat
-Rat programming language compiler
+Random Access Type orogramming language compiler
