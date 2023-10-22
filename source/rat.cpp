@@ -32,11 +32,15 @@ Token AddToken(string buffer)
 
 vector<vector<Token>> Tokenize(string text)
 {
-    vector<vector<Token>> tokens;
+    vector<vector<Token>> tokens; // [[Token, Token], [Token, Token, Token], [Token]]
     int line = 0;
     string buffer;
     for (char character : text)
     {
+        if (tokens.size() < line + 1)
+        {
+            tokens.push_back({});
+        }
         if (character == ' ' && !buffer.empty())
         {
             tokens[line].push_back(AddToken(buffer));
