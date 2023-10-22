@@ -42,6 +42,7 @@ vector<Token> Tokenize(string text)
             buffer.clear();
             continue;
         }
+        buffer.push_back(character);
     }
     return tokens;
 }
