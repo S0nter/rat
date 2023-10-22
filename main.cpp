@@ -30,5 +30,6 @@ int main()
         return 1;
     }
     outputfile << output;
+    outputfile.close();
     cout << "SUCCESS";
 }
