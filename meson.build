@@ -12,5 +12,5 @@ project(
 
 
 executable('rat',
-           'main.cpp'
+           'src/main.cpp'
 )
