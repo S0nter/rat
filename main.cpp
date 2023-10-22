@@ -13,7 +13,7 @@ int main()
     if (!file.is_open())
     {
         cout << "Cannot open \33[1;91m\"" + name + "\"\33[0m" << endl;
-        main();
+        return 1;
     }
     string content;
     string line;
