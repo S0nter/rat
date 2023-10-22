@@ -30,7 +30,6 @@ int main()
         cout << "Cannot open \33[1;91m\"output.asm\"\33[0m" << endl;
         return 1;
     }
-    cout << output;
     outputfile << output;
     outputfile.close();
     cout << "SUCCESS";
