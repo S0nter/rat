@@ -32,14 +32,20 @@ Token AddToken(string buffer)
 
 vector<Token> Tokenize(string text)
 {
-    vector<Token> tokens;
+    vector<vector<Token>> tokens;
+    int line = 0;
     string buffer;
     for (char character : text)
     {
         if (character == ' ' && !buffer.empty())
         {
-            tokens.push_back(AddToken(buffer));
+            tokens[line].push_back(AddToken(buffer));
             buffer.clear();
+            continue;
+        }
+        if (character == '\n' || character == ';')
+        {
+            line++;
             continue;
         }
         buffer.push_back(character);
