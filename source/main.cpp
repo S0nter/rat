@@ -9,36 +9,46 @@ string Red(string text)
     return "\33[1;91m" + text + "\33[0m";
 }
 
-int main(int argc, char* argv[])
+string ReadFile(string name)
 {
-    if (argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " file.rat out" << endl;
-        return 1;
-    }
-    string name(argv[1]);
     fstream file;
-    cout << "File name: " << name << endl;;
     file.open("./" + name, ios_base::in);
     if (!file.is_open())
     {
         cout << "Cannot open " << "\"" << Red(name) << "\"" << endl;
-        return 1;
+        exit(1);
     }
     string content;
     string line;
     while (getline(file, line))
         content += line + '\n';
     file.close();
+    return content;
+}
 
-    string output = Compile(content);
-    fstream outputfile;
-    outputfile.open(argv[2], ios_base::out);
-    if (!outputfile.is_open())
+void WriteFile(string name, content)
+{
+    fstream file;
+    file.open(name, ios_base::out);
+    if (!file.is_open())
     {
         cout << "Cannot open " << "\"" << Red(argv[2]) << "\"" << endl;
-        return 1;
+        exit(1);
     }
     outputfile << output;
     outputfile.close();
+}
+
+int main(int argc, char* argv[])
+{
+    if (argc <= 1) {
+        std::cout << "Usage: " << argv[0] << " file.rat out" << endl;
+        return 1;
+    }
+    cout << "Opening " << argv[1] << endl;
+    string content = ReadFile(argv[1]);
+    
+    string output = Compile(content);
+    WriteFile(argv[2], output);
     return 0;
 }
