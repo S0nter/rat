@@ -30,17 +30,12 @@ Token AddToken(string buffer)
     return token;
 }
 
-vector<vector<Token>> Tokenize(string text)
+vector<Token> Tokenize(string text)
 {
-    vector<vector<Token>> tokens; // [[Token, Token], [Token, Token, Token], [Token]]
-    int line = 0;
+    vector<vector<Token>> tokens;
     string buffer;
     for (char character : text)
     {
-        if (tokens.size() < line + 1)
-        {
-            tokens.push_back({});
-        }
         if (character == ' ' && !buffer.empty())
         {
             tokens[line].push_back(AddToken(buffer));
@@ -49,38 +44,33 @@ vector<vector<Token>> Tokenize(string text)
         }
         if (character == '\n' || character == ';')
         {
-            line++;
-            continue;
+            buffer.push_back(character);
         }
-        buffer.push_back(character);
     }
     return tokens;
 }
 
-void Parse(vector<vector<Token>> tokens)
+void Parse(vector<Token> tokens)
 {
-    for (vector<Token> line : tokens)
+    for (Token token : tokens)
     {
         // do smth
     }
 }
 
-string Convert(vector<vector<Token>> tokens)
+string Convert(vector<Token> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
-    for (vector<Token> line : tokens)
+    for (Token token : tokens)
     {
-        for (Token token : line)
+        if (token.type == Type::_exit)
         {
-            if (token.type == Type::_exit)
-            {
-                output += "mov rax, 60\n";
-                output += "mov rdi, 0\n";
-                output += "syscall\n";
-            }
+            output += "mov rax, 60\n";
+            output += "mov rdi, 0\n";
+            output += "syscall\n";
         }
     }
     return output;
@@ -88,7 +78,7 @@ string Convert(vector<vector<Token>> tokens)
 
 string Compile(string text)
 {
-    vector<vector<Token>> tokens = Tokenize(text);
+    vector<Token> tokens = Tokenize(text);
     Parse(tokens);
     string output = Convert(tokens);
     return output;
