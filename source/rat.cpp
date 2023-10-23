@@ -32,7 +32,7 @@ Token AddToken(string buffer)
 
 vector<Token> Tokenize(string text)
 {
-    vector<vector<Token>> tokens;
+    vector<Token> tokens;
     string buffer;
     for (char character : text)
     {
