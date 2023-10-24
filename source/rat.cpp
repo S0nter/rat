@@ -16,6 +16,13 @@ struct Token
     int value = 0;
 };
 
+struct Tree
+{
+    Token value;
+    struct Tree* left;
+    struct Tree* right;
+};
+
 Token AddToken(string buffer)
 {
     Token token;
@@ -52,7 +59,7 @@ vector<vector<Token>> Tokenize(string text)
     return tokens;
 }
 
-string Parse(vector<Token> line)
+Tree Parse(vector<Token> line)
 {
     for (Token token : line)
     {
@@ -60,16 +67,16 @@ string Parse(vector<Token> line)
     }
 }
 
-string Convert(vector<string> trees)
+string Convert(vector<Tree> trees)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (string tree : trees)
+    for (Tree tree : trees)
     {
-        
+
     }
     // for (Token token : trees)
     // {
@@ -86,7 +93,7 @@ string Convert(vector<string> trees)
 string Compile(string text)
 {
     vector<vector<Token>> lines = Tokenize(text);
-    vector<string> trees;
+    vector<Tree> trees;
     for (vector<Token> line : lines)
     {
         trees.push_back(Parse(line));
