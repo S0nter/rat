@@ -6,8 +6,8 @@ using namespace std;
 enum Type
 {
     _none,
-    _exit,
     _number,
+    _exit,
 };
 
 struct Token
@@ -61,9 +61,17 @@ vector<vector<Token>> Tokenize(string text)
 
 Tree Parse(vector<Token> line)
 {
+    Tree tree;
     for (Token token : line)
     {
-        // do smth
+        // exit 6 * 2
+        //     to
+
+        //    exit
+        //    /  \
+        //        *
+        //       / \
+        //      6   2
     }
 }
 
@@ -76,17 +84,13 @@ string Convert(vector<Tree> trees)
 
     for (Tree tree : trees)
     {
-
+        if (tree.value.type == Type::_exit)
+        {
+            output += "mov rax, 60\n";
+            output += "mov rdi, " + tree.right.value + '\n';
+            output += "syscall\n";
+        }
     }
-    // for (Token token : trees)
-    // {
-    //     if (token.type == Type::_exit)
-    //     {
-    //         output += "mov rax, 60\n";
-    //         output += "mov rdi, 0\n";
-    //         output += "syscall\n";
-    //     }
-    // }
     return output;
 }
 
