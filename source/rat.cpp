@@ -30,56 +30,67 @@ Token AddToken(string buffer)
     return token;
 }
 
-vector<Token> Tokenize(string text)
+vector<vector<Token>> Tokenize(string text)
 {
-    vector<Token> tokens;
+    vector<vector<Token>> lines;
+    vector<Token> line;
     string buffer;
     for (char character : text)
     {
         if (character == ' ' && !buffer.empty())
         {
-            tokens[line].push_back(AddToken(buffer));
+            line.push_back(AddToken(buffer));
             buffer.clear();
             continue;
         }
         if (character == '\n' || character == ';')
         {
-            buffer.push_back(character);
+            lines.push_back(line);
+            line.clear();
         }
     }
     return tokens;
 }
 
-void Parse(vector<Token> tokens)
+string Parse(vector<Token> line)
 {
-    for (Token token : tokens)
+    for (Token token : line)
     {
         // do smth
     }
 }
 
-string Convert(vector<Token> tokens)
+string Convert(vector<string> trees)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
-    for (Token token : tokens)
+
+    for (string tree : trees)
     {
-        if (token.type == Type::_exit)
-        {
-            output += "mov rax, 60\n";
-            output += "mov rdi, 0\n";
-            output += "syscall\n";
-        }
+        
     }
+    // for (Token token : trees)
+    // {
+    //     if (token.type == Type::_exit)
+    //     {
+    //         output += "mov rax, 60\n";
+    //         output += "mov rdi, 0\n";
+    //         output += "syscall\n";
+    //     }
+    // }
     return output;
 }
 
 string Compile(string text)
 {
-    vector<Token> tokens = Tokenize(text);
-    Parse(tokens);
-    string output = Convert(tokens);
+    vector<vector<Token>> lines = Tokenize(text);
+    vector<string> trees;
+    for (vector<Token> line : lines)
+    {
+        trees.push_back(Parse(line));
+    }
+    string output = Convert(trees);
     return output;
 }
