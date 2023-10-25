@@ -14,13 +14,8 @@ struct Token
 {
     Type type = Type::_none;
     int value = 0;
-};
-
-struct Tree
-{
-    Token value;
-    struct Tree* left;
-    struct Tree* right;
+    struct Token* left;
+    struct Token* right;
 };
 
 Token AddToken(string buffer)
@@ -61,33 +56,33 @@ vector<vector<Token>> Tokenize(string text)
 
 Tree Parse(vector<Token> line)
 {
-    Tree tree;
     for (Token token : line)
     {
         // exit 6 * 2
+        
         //     to
 
         //    exit
         //    /  \
         //        *
-        //       / \
+        //       / \ 
         //      6   2
     }
 }
 
-string Convert(vector<Tree> trees)
+string Convert(vector<Token> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (Tree tree : trees)
+    for (Token token : tokens)
     {
-        if (tree.value.type == Type::_exit)
+        if (token.type == Type::_exit)
         {
             output += "mov rax, 60\n";
-            output += "mov rdi, " + tree.right.value + '\n';
+            output += "mov rdi, " + token.right.value + '\n';
             output += "syscall\n";
         }
     }
@@ -97,11 +92,11 @@ string Convert(vector<Tree> trees)
 string Compile(string text)
 {
     vector<vector<Token>> lines = Tokenize(text);
-    vector<Tree> trees;
+    vector<Token> tokens;
     for (vector<Token> line : lines)
     {
-        trees.push_back(Parse(line));
+        tokens.push_back(Parse(line));
     }
-    string output = Convert(trees);
+    string output = Convert(tokens);
     return output;
 }
