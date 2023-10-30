@@ -18,7 +18,7 @@ struct Token
     struct Token* right;
 };
 
-Token AddToken(string value, Type type = Type::_none;)
+Token AddToken(string value, Type type = Type::_none)
 {
     Token token;
     token.type = type;
