@@ -14,19 +14,19 @@ struct Token
 {
     Type type = Type::_none;
     string value = 0;
-    Token(Type t, int v)
-    {
-        type = t;
-        value = v;
-    }
     struct Token* left;
     struct Token* right;
 };
 
-Token AddToken(string buffer)
+Token AddToken(string value, Type type = Type::_none;)
 {
     Token token;
-    if (buffer == "exit")
+    token.type = type;
+    if (type == Type::_number)
+    {
+        token.value = stoi(value);
+    }
+    else if (value == "exit")
     {
         token.type = Type::_exit;
     }
@@ -64,7 +64,7 @@ vector<vector<Token>> Tokenize(string text)
                 buffer.push_back(character);
                 character = text.at(++id); 
             } while (std::isdigit(character));
-            line.push_back(Token(Type::_number, stoi(buffer)));
+            line.push_back(AddToken(buffer, Type::_number));
             buffer.clear();
         }
         if (character == '\n' || character == ';')
@@ -74,24 +74,10 @@ vector<vector<Token>> Tokenize(string text)
         }
         character = text.at(++id);
     }
-    // for (char character : text)
-    // {
-    //     if (character == ' ' && !buffer.empty())
-    //     {
-    //         line.push_back(AddToken(buffer));
-    //         buffer.clear();
-    //         continue;
-    //     }
-    //     if (character == '\n' || character == ';')
-    //     {
-    //         lines.push_back(line);
-    //         line.clear();
-    //     }
-    // }
     return lines;
 }
 
-Tree Parse(vector<Token> line)
+Token Parse(vector<Token> line)
 {
     Token root;
     for (Token token : line)
@@ -101,15 +87,6 @@ Tree Parse(vector<Token> line)
             root = token;
 
         }
-        // exit 6 * 2
-        
-        //     to
-
-        //    exit
-        //    /  \
-        //        *
-        //       / \ 
-        //      6   2
     }
     return root;
 }
@@ -126,7 +103,7 @@ string Convert(vector<Token> tokens)
         if (token.type == Type::_exit)
         {
             output += "mov rax, 60\n";
-            output += "mov rdi, " + token.right.value + '\n';
+            output += "mov rdi, " + token.right->value + '\n';
             output += "syscall\n";
         }
     }
