@@ -82,7 +82,7 @@ Token Parse(vector<Token> line)
     Token root;
     for (Token token : line)
     {
-        if (token.type = Type::_exit)
+        if (token.type == Type::_exit)
         {
             root = token;
 
