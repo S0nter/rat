@@ -104,7 +104,7 @@ string Convert(vector<Token> tokens)
 
     for (Token token : tokens)
     {
-        if (token.type == Type::_exit && token.right != nullptr)
+        if (token.type == Type::_exit)
         {
             output += "mov rax, 60\n";
             output += "mov rdi, " + token.right->value + '\n';
@@ -122,6 +122,6 @@ string Compile(string text)
     {
         tokens.push_back(Parse(line));
     }
-    string output = Convert(tokens);
+    //string output = Convert(tokens);
     return output;
 }
