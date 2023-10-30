@@ -26,17 +26,17 @@ string ReadFile(string name)
     return content;
 }
 
-void WriteFile(string name, content)
+void WriteFile(string name, string content)
 {
     fstream file;
     file.open(name, ios_base::out);
     if (!file.is_open())
     {
-        cout << "Cannot open " << "\"" << Red(argv[2]) << "\"" << endl;
+        cout << "Cannot open " << "\"" << Red(name) << "\"" << endl;
         exit(1);
     }
-    outputfile << output;
-    outputfile.close();
+    file << content;
+    file.close();
 }
 
 int main(int argc, char* argv[])

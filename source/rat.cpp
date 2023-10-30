@@ -53,7 +53,7 @@ vector<vector<Token>> Tokenize(string text)
             {
                 buffer.push_back(character);
                 character = text.at(++id); 
-            } while (std::isalnum(character))
+            } while (std::isalnum(character));
             line.push_back(AddToken(buffer));
             buffer.clear();
         }
@@ -63,7 +63,7 @@ vector<vector<Token>> Tokenize(string text)
             {
                 buffer.push_back(character);
                 character = text.at(++id); 
-            } while (std::isdigit(character))
+            } while (std::isdigit(character));
             line.push_back(Token(Type::_number, stoi(buffer)));
             buffer.clear();
         }
@@ -88,7 +88,7 @@ vector<vector<Token>> Tokenize(string text)
     //         line.clear();
     //     }
     // }
-    return tokens;
+    return lines;
 }
 
 Tree Parse(vector<Token> line)
