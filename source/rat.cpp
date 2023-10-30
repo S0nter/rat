@@ -13,7 +13,12 @@ enum Type
 struct Token
 {
     Type type = Type::_none;
-    int value = 0;
+    string value = 0;
+    Token(Type t, int v)
+    {
+        type = t;
+        value = v;
+    }
     struct Token* left;
     struct Token* right;
 };
@@ -35,29 +40,67 @@ Token AddToken(string buffer)
 vector<vector<Token>> Tokenize(string text)
 {
     vector<vector<Token>> lines;
+    
     vector<Token> line;
+    int id = 0;
+    char character = text.at(id);
     string buffer;
-    for (char character : text)
+    while (id < text.size())
     {
-        if (character == ' ' && !buffer.empty())
+        if (std::isalpha(character))
         {
+            do
+            {
+                buffer.push_back(character);
+                character = text.at(++id); 
+            } while (std::isalnum(character))
             line.push_back(AddToken(buffer));
             buffer.clear();
-            continue;
+        }
+        if (std::isdigit(character))
+        {
+            do
+            {
+                buffer.push_back(character);
+                character = text.at(++id); 
+            } while (std::isdigit(character))
+            line.push_back(Token(Type::_number, stoi(buffer)));
+            buffer.clear();
         }
         if (character == '\n' || character == ';')
         {
             lines.push_back(line);
             line.clear();
         }
+        character = text.at(++id);
     }
+    // for (char character : text)
+    // {
+    //     if (character == ' ' && !buffer.empty())
+    //     {
+    //         line.push_back(AddToken(buffer));
+    //         buffer.clear();
+    //         continue;
+    //     }
+    //     if (character == '\n' || character == ';')
+    //     {
+    //         lines.push_back(line);
+    //         line.clear();
+    //     }
+    // }
     return tokens;
 }
 
 Tree Parse(vector<Token> line)
 {
+    Token root;
     for (Token token : line)
     {
+        if (token.Type type = Type::_exit)
+        {
+            root = token;
+
+        }
         // exit 6 * 2
         
         //     to
@@ -68,6 +111,7 @@ Tree Parse(vector<Token> line)
         //       / \ 
         //      6   2
     }
+    return root;
 }
 
 string Convert(vector<Token> tokens)
