@@ -116,13 +116,13 @@ string Convert(vector<Token> tokens)
 
 string Compile(string text)
 {
-    vector<vector<Token>> lines = Tokenize(text);
     vector<Token> tokens;
+    vector<vector<Token>> lines = Tokenize(text);
     for (vector<Token> line : lines)
     {
         tokens.push_back(Parse(line));
     }
-    // string output = Convert(tokens);
-    string output = "ROKEROKEROKEROKEROKEROKEROKEROKE";
+    string output = Convert(tokens);
+    // string output = "ROKEROKEROKEROKEROKEROKEROKEROKE";
     return output;
 }
