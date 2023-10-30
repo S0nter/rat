@@ -122,6 +122,7 @@ string Compile(string text)
     {
         tokens.push_back(Parse(line));
     }
-    //string output = Convert(tokens);
+    // string output = Convert(tokens);
+    string output = "ROKEROKEROKEROKEROKEROKEROKEROKE";
     return output;
 }
