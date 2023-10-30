@@ -90,7 +90,6 @@ Token Parse(vector<Token> line)
         if (token.type == Type::_exit)
         {
             root = token;
-
         }
     }
     return root;
@@ -105,7 +104,7 @@ string Convert(vector<Token> tokens)
 
     for (Token token : tokens)
     {
-        if (token.type == Type::_exit)
+        if (token.type == Type::_exit && token.right != nullptr)
         {
             output += "mov rax, 60\n";
             output += "mov rdi, " + token.right->value + '\n';
