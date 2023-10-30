@@ -45,14 +45,14 @@ vector<vector<Token>> Tokenize(string text)
     int id = 0;
     char character = text.at(id);
     string buffer;
-    while (id < text.size())
+    while (true)
     {
         if (std::isalpha(character))
         {
             do
             {
                 buffer.push_back(character);
-                character = text.at(++id); 
+                character = text.at(++id);
             } while (std::isalnum(character));
             line.push_back(AddToken(buffer));
             buffer.clear();
@@ -72,7 +72,10 @@ vector<vector<Token>> Tokenize(string text)
             lines.push_back(line);
             line.clear();
         }
-        character = text.at(++id);
+        if (id < text.size())
+            character = text.at(++id);
+        else
+            break;
     }
     return lines;
 }
