@@ -13,7 +13,7 @@ enum Type
 struct Token
 {
     Type type = Type::_none;
-    string value = 0;
+    string value;
     struct Token* left;
     struct Token* right;
 };
