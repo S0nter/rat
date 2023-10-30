@@ -52,7 +52,8 @@ vector<vector<Token>> Tokenize(string text)
             do
             {
                 buffer.push_back(character);
-                character = text.at(++id);
+                if (++id < text.size())
+                    character = text.at(id);
             } while (std::isalnum(character));
             line.push_back(AddToken(buffer));
             buffer.clear();
@@ -62,7 +63,8 @@ vector<vector<Token>> Tokenize(string text)
             do
             {
                 buffer.push_back(character);
-                character = text.at(++id); 
+                if (++id < text.size())
+                    character = text.at(id); 
             } while (std::isdigit(character));
             line.push_back(AddToken(buffer, Type::_number));
             buffer.clear();
@@ -72,8 +74,8 @@ vector<vector<Token>> Tokenize(string text)
             lines.push_back(line);
             line.clear();
         }
-        if (id < text.size())
-            character = text.at(++id);
+        if (++id < text.size())
+            character = text.at(id);
         else
             break;
     }
