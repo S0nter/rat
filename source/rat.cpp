@@ -8,7 +8,7 @@ enum Type
     _none,
     _keyword,
     _number,
-    _operator,
+    _operator
 };
 
 struct TokenTree
