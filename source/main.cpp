@@ -34,10 +34,10 @@
 bool test()
 {
     if (
-        isMathOperator('*') &&
-        isMathOperator('/') &&
-        isMathOperator('+') &&
-        isMathOperator('-')) return true;
+        IsMathOperator('*') &&
+        IsMathOperator('/') &&
+        IsMathOperator('+') &&
+        IsMathOperator('-')) return true;
     return false;
 }
 

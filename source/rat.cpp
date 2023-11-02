@@ -1,11 +1,12 @@
 #include <string>
 #include <vector>
+#include "basic_functions.h"
 using namespace std;
 
 enum Type
 {
     _none,
-    _keyword
+    _keyword,
     _number,
     _operator,
 };
@@ -23,16 +24,6 @@ struct Token
     Type type = Type::_none;
     string value;
 };
-
-bool IsOperator(string value)
-{
-    if (character == '+' ||
-        character == '-' ||
-        character == '*' ||
-        character == '/')
-        return true;
-    return false;
-}
 
 bool IsNumber(string value)
 {
@@ -52,11 +43,11 @@ Token AddToken(string value)
     Token token;
     token.value = value;
 
-    if (IsOperator(value))
+    if (IsMathOperator(value[0]))
         token.type = Type::_operator;
     else if (value == "exit")
         token.type = Type::_keyword;
-    else if (value == ';')
+    else if (value == ";")
         token.type = Type::_keyword;
     else if (IsNumber(value))
         token.type = Type::_number;
@@ -80,7 +71,7 @@ vector<Token> Tokenize(string text)
                 character = text.at(++id);
             }
             while (std::isalnum(character) && id + 1 < text.size());
-            
+
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
@@ -89,7 +80,7 @@ vector<Token> Tokenize(string text)
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        
+
         //check if id is out of range
         if (++id < text.size())
             character = text.at(id);
@@ -111,7 +102,7 @@ Token Parse(vector<Token> line)
     Token root;
     for (Token token : line)
     {
-        if (token.type == Type::_exit)
+        if (token.type == Type::_keyword)
         {
             root = token;
         }
@@ -128,7 +119,7 @@ string Convert(vector<TokenTree> tokens)
 
     for (TokenTree token : tokens)
     {
-        if (token.type == Type::_exit)
+        if (token.type == Type::_keyword) // exit
         {
             output += "mov rax, 60\n";
             output += "mov rdi, " + token.right->value + '\n';

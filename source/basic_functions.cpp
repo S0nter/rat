@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-bool isMathOperator(char character)
+bool IsMathOperator(char character)
 {
     if (
         character == '+' ||
