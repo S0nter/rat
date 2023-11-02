@@ -95,10 +95,7 @@ vector<vector<Token>> Divide(vector<Token> tokens)
             line.push_back(token); // push token to line
     }
     if (!line.empty()) // push last line
-    {
         lines.push_back(line);
-        line.clear();
-    }
     return lines;
 }
 
