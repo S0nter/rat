@@ -43,8 +43,9 @@ vector<Token> Tokenize(string text)
     int id = 0;
     char character = text.at(id);
     string buffer;
-    while (true)
+    while (id + 1 < text.size())
     {
+        character = text.at(++id);
         if (std::isalnum(character))
         {
             do
@@ -64,12 +65,6 @@ vector<Token> Tokenize(string text)
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-
-        // check if id is out of range
-        if (++id < text.size())
-            character = text.at(id);
-        else
-            break;
     }
 
     for (int i = 0; i < tokens.size(); i++) // visualise tokens
@@ -81,9 +76,9 @@ vector<Token> Tokenize(string text)
     return tokens;
 }
 
-vector<Token> Fract()
+vector<Token> Divide()
 {
-    
+
 }
 
 Token Parse(vector<Token> line)
@@ -121,7 +116,7 @@ string Convert(vector<Token> tokens)
 string Compile(string text)
 {
     vector<Token> tokens = Tokenize(text);
-    vector<vector<Token>> lines = Fract(tokens);
+    vector<vector<Token>> lines = Divide(tokens);
 
     vector<Token> trees;
     for (vector<Token> lines : lines)
