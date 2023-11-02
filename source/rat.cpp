@@ -83,7 +83,7 @@ vector<vector<Token>> Divide(vector<Token> tokens)
     vector<Token> line;
     for (Token token : tokens)
     {
-        if (token.type == Type::_end_of_line && line.empty())
+        if (token.type == Type::_end_of_line && !line.empty())
         {
             lines.push_back(line);
             line.clear();
