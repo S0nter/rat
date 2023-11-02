@@ -81,6 +81,11 @@ vector<Token> Tokenize(string text)
     return tokens;
 }
 
+vector<Token> Fract()
+{
+    
+}
+
 Token Parse(vector<Token> line)
 {
     Token root;
@@ -115,12 +120,13 @@ string Convert(vector<Token> tokens)
 
 string Compile(string text)
 {
-    vector<Token> token_tree;
-    vector<Token> lines = Tokenize(text);
-    // for (vector<Token> line : lines)
-    // {
-        // token_tree = Parse(lines); // FIXME
-    // }
-    string output = Convert(token_tree);
+    vector<Token> tokens = Tokenize(text);
+    vector<vector<Token>> lines = Fract(tokens);
+
+    vector<Token> trees;
+    for (vector<Token> lines : lines)
+        trees.push_back(Parse(line));
+    
+    string output = Convert(trees);
     return output;
 }
