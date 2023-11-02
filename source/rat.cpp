@@ -79,7 +79,19 @@ vector<Token> Tokenize(string text)
 
 vector<vector<Token>> Divide(vector<Token> tokens)
 {
-    ; // FIXME
+    vector<vector<Token>> lines;
+    vector<Token> line;
+    for (Token token : tokens)
+    {
+        if (token.type == Type::_end_of_line)
+        {
+            lines.push_back(line);
+            line.clear();
+        }
+        else
+            line.push_back(token);
+    }
+    return lines;
 }
 
 Token Parse(vector<Token> line)
