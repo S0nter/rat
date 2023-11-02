@@ -11,32 +11,13 @@ enum Type
     _operator
 };
 
-struct TokenTree
+struct Token
 {
     Type type = Type::_none;
     string value;
     struct Token* left;
     struct Token* right;
 };
-
-struct Token
-{
-    Type type = Type::_none;
-    string value;
-};
-
-bool IsNumber(string value)
-{
-    bool result = false;
-    for (char character : value)
-    {
-        if (!isdigit(character))
-            return false;
-        else
-            result = true;
-    }
-    return result;
-}
 
 Token AddToken(string value)
 {
@@ -110,14 +91,14 @@ Token Parse(vector<Token> line)
     return root;
 }
 
-string Convert(vector<TokenTree> tokens)
+string Convert(vector<Token> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (TokenTree token : tokens)
+    for (Token token : tokens)
     {
         if (token.type == Type::_keyword && token.value == "exit") // exit
         {
@@ -131,7 +112,7 @@ string Convert(vector<TokenTree> tokens)
 
 string Compile(string text)
 {
-    vector<TokenTree> token_tree;
+    vector<Token> token_tree;
     vector<Token> lines = Tokenize(text);
     // for (vector<Token> line : lines)
     // {
