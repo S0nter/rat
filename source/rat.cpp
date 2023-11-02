@@ -1,6 +1,7 @@
 #include <string>
 #include <vector>
 #include "basic_functions.h"
+
 using namespace std;
 
 enum Type
@@ -54,7 +55,6 @@ vector<Token> Tokenize(string text)
             }
             while (std::isalnum(character) && id + 1 < text.size());
 
-
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
@@ -66,12 +66,6 @@ vector<Token> Tokenize(string text)
         }
         if (++id + 1 < text.size())
             character = text.at(id);
-    }
-
-    for (int i = 0; i < tokens.size(); i++) // visualise tokens
-    {
-        std::cout << i << ":\"" << tokens[i].value << "\""
-                       << "|\"" << tokens[i].type  << "\"" << std::endl;
     }
 
     return tokens;

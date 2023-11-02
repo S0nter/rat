@@ -47,7 +47,7 @@ string ReadFile(string name)
     file.open("./" + name, ios_base::in);
     if (!file.is_open())
     {
-        std::cout << "Cannot open " << "\"" << Red(name) << "\"" << std::endl;
+        std::cout << "Cannot open " << Quote(Red(name)) << std::endl;
         exit(1);
     }
     string content;
@@ -64,7 +64,7 @@ void WriteFile(string name, string content)
     file.open(name, ios_base::out);
     if (!file.is_open())
     {
-        std::cout << "Cannot open " << "\"" << Red(name) << "\"" << std::endl;
+        std::cout << "Cannot open " << Quote(Red(name)) << std::endl;
         exit(1);
     }
     file << content;
