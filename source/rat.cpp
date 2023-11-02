@@ -9,8 +9,8 @@ enum Type
 {
     _none,
     _number,
-    _math_operator,
-    _instruction_end,
+    _operator,
+    _end,
     _exit,
 };
 
@@ -87,16 +87,14 @@ vector<Token> Tokenize(string text)
             std::cout << character << " isarithmetic" << std::endl;
 
             buffer.push_back(character);
-            tokens.push_back(AddToken(buffer, Type::_math_operator));
+            tokens.push_back(AddToken(buffer, Type::_operator));
             buffer.clear();
         }
         else if (character == '\n' || character == ';')
         {
-            tokens.push_back(AddToken("", Type::_instruction_end));
+            tokens.push_back(AddToken("", Type::_end));
         }
-
-
-
+        
         if (++id < text.size())
             character = text.at(id);
         else
@@ -104,10 +102,10 @@ vector<Token> Tokenize(string text)
     }
 
     for (int i = 0; i < tokens.size(); i++) // visualise tokens
-        {
+    {
         std::cout << i << ":\"" << tokens[i].value << "\""
                        << "|\"" << tokens[i].type  << "\"" << std::endl;
-        }
+    }
 
     return tokens;
 }
