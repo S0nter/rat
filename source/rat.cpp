@@ -119,7 +119,7 @@ string Convert(vector<TokenTree> tokens)
 
     for (TokenTree token : tokens)
     {
-        if (token.type == Type::_keyword) // exit
+        if (token.type == Type::_keyword && token.value == "exit") // exit
         {
             output += "mov rax, 60\n";
             output += "mov rdi, " + token.right->value + '\n';
