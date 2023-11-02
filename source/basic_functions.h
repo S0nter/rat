@@ -4,7 +4,7 @@
 #include <string>
 
 
-bool IsMathOperator(char character);
+bool IsOperator(char character);
 
 std::string Red(std::string text);
 std::string Green(std::string text);
