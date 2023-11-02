@@ -76,9 +76,9 @@ vector<Token> Tokenize(string text)
     return tokens;
 }
 
-vector<Token> Divide()
+vector<vector<Token>> Divide(vector<Token> tokens)
 {
-
+    ; // FIXME
 }
 
 Token Parse(vector<Token> line)
@@ -120,7 +120,7 @@ string Compile(string text)
 
     vector<Token> trees;
     for (vector<Token> lines : lines)
-        trees.push_back(Parse(line));
+        trees.push_back(Parse(lines));
     
     string output = Convert(trees);
     return output;
