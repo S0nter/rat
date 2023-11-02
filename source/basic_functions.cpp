@@ -4,19 +4,13 @@
 #include <iostream>
 
 
-bool IsOperator(char character)
+bool IsOperator(std::string value)
 {
-    if (
-        character == '+' ||
-        character == '-' ||
-        character == '*' ||
-        character == '/') {
-        std::cout << character << " is math operator" << std::endl;
-
+    if (value == "+" ||
+        value == "-" ||
+        value == "*" ||
+        value == "/")
         return true;
-
-        }
-    std::cout << character << " is not math operator" << std::endl;
     return false;
 }
 
