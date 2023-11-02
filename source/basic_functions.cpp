@@ -11,12 +11,12 @@ bool isMathOperator(char character)
         character == '-' ||
         character == '*' ||
         character == '/') {
-        std::cout << character << " math operator" << std::endl;
+        std::cout << character << " is math operator" << std::endl;
 
         return true;
 
         }
-    std::cout << character << " not math operator" << std::endl;
+    std::cout << character << " is not math operator" << std::endl;
     return false;
 }
 
