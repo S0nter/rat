@@ -43,7 +43,7 @@ Token AddToken(string value)
     Token token;
     token.value = value;
 
-    if (IsOperator(value[0]))
+    if (IsOperator(value))
         token.type = Type::_operator;
     else if (value == "exit")
         token.type = Type::_keyword;
