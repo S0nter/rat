@@ -1,7 +1,7 @@
 project(
     'rat',
     'cpp',
-    version : '1.0.0',
+    version : '0.0.1',
     default_options : [
         'buildtype=debug',
         'optimization=0',
@@ -10,7 +10,12 @@ project(
     meson_version: '>= 0.60.0',
 )
 
+src = [
+    'source/main.cpp',
+    'source/basic_functions.cpp'
+]
 
 executable('rat',
-           'source/main.cpp'
+           sources: src,
+           dependencies: [dependency('docopt')]  # docopt - cli args parser
 )

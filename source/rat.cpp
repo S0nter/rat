@@ -1,16 +1,20 @@
 #include <string>
 #include <vector>
 
+#include "basic_functions.h"
+
 using namespace std;
 
 enum Type
 {
     _none,
     _number,
+    _math_operator,
+    _instruction_end,
     _exit,
 };
 
-struct Token
+struct TokenTree
 {
     Type type = Type::_none;
     string value;
@@ -18,30 +22,28 @@ struct Token
     struct Token* right;
 };
 
+struct Token
+{
+    Type type = Type::_none;
+    string value;
+};
+
 Token AddToken(string value, Type type = Type::_none)
 {
     Token token;
     token.type = type;
-    if (type == Type::_number)
-    {
-        token.value = stoi(value);
-    }
-    else if (value == "exit")
+    token.value = value;
+    if (value == "exit") // keyword handling
     {
         token.type = Type::_exit;
-    }
-    else
-    {
-        token.type = Type::_none;
     }
     return token;
 }
 
-vector<vector<Token>> Tokenize(string text)
+vector<Token> Tokenize(string text)
 {
-    vector<vector<Token>> lines;
-    
-    vector<Token> line;
+    vector<Token> tokens;
+
     int id = 0;
     char character = text.at(id);
     string buffer;
@@ -49,37 +51,65 @@ vector<vector<Token>> Tokenize(string text)
     {
         if (std::isalpha(character))
         {
+            std::cout << character << " isalpha" << std::endl;
+            do
+            {
+                std::cout << character << " isalnum" << std::endl;
+                buffer.push_back(character);
+                if (++id < text.size())
+                    character = text.at(id);
+            }
+            while (std::isalnum(character));
+
+            std::cout << "Adding buffer: " << buffer << std::endl;
+
+            tokens.push_back(AddToken(buffer)); // adding string token
+            buffer.clear();
+        }
+        else if (std::isdigit(character))
+        {
+            std::cout << character << " isdigit" << std::endl;
             do
             {
                 buffer.push_back(character);
                 if (++id < text.size())
                     character = text.at(id);
-            } while (std::isalnum(character));
-            line.push_back(AddToken(buffer));
+            }
+            while (std::isdigit(character));
+
+            std::cout << "endNumberValue: " << buffer << std::endl;
+
+            tokens.push_back(AddToken(buffer, Type::_number));
             buffer.clear();
         }
-        if (std::isdigit(character))
+        else if (isMathOperator(character))
         {
-            do
-            {
-                buffer.push_back(character);
-                if (++id < text.size())
-                    character = text.at(id); 
-            } while (std::isdigit(character));
-            line.push_back(AddToken(buffer, Type::_number));
+            std::cout << character << " isarithmetic" << std::endl;
+
+            buffer.push_back(character);
+            tokens.push_back(AddToken(buffer, Type::_math_operator));
             buffer.clear();
         }
-        if (character == '\n' || character == ';')
+        else if (character == '\n' || character == ';')
         {
-            lines.push_back(line);
-            line.clear();
+            tokens.push_back(AddToken("", Type::_instruction_end));
         }
+
+
+
         if (++id < text.size())
             character = text.at(id);
         else
             break;
     }
-    return lines;
+
+    for (int i = 0; i < tokens.size(); i++) // visualise tokens
+        {
+        std::cout << i << ":\"" << tokens[i].value << "\""
+                       << "|\"" << tokens[i].type  << "\"" << std::endl;
+        }
+
+    return tokens;
 }
 
 Token Parse(vector<Token> line)
@@ -95,14 +125,14 @@ Token Parse(vector<Token> line)
     return root;
 }
 
-string Convert(vector<Token> tokens)
+string Convert(vector<TokenTree> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (Token token : tokens)
+    for (TokenTree token : tokens)
     {
         if (token.type == Type::_exit)
         {
@@ -116,13 +146,12 @@ string Convert(vector<Token> tokens)
 
 string Compile(string text)
 {
-    vector<Token> tokens;
-    vector<vector<Token>> lines = Tokenize(text);
-    for (vector<Token> line : lines)
-    {
-        tokens.push_back(Parse(line));
-    }
-    string output = Convert(tokens);
-    // string output = "ROKEROKEROKEROKEROKEROKEROKEROKE";
+    vector<TokenTree> token_tree;
+    vector<Token> lines = Tokenize(text);
+    // for (vector<Token> line : lines)
+    // {
+        // token_tree = Parse(lines); // FIXME
+    // }
+    string output = Convert(token_tree);
     return output;
 }
