@@ -43,9 +43,8 @@ vector<Token> Tokenize(string text)
     int id = 0;
     char character = text.at(id);
     string buffer;
-    while (id + 1 < text.size())
+    while (id < text.size())
     {
-        character = text.at(++id);
         if (std::isalnum(character))
         {
             do
@@ -65,6 +64,8 @@ vector<Token> Tokenize(string text)
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
+        if (++id + 1 < text.size())
+            character = text.at(id);
     }
 
     for (int i = 0; i < tokens.size(); i++) // visualise tokens
