@@ -8,7 +8,8 @@ enum Type
     _none,
     _keyword,
     _number,
-    _operator
+    _operator,
+    _end_of_line
 };
 
 struct Token
@@ -28,8 +29,8 @@ Token AddToken(string value)
         token.type = Type::_operator;
     else if (value == "exit")
         token.type = Type::_keyword;
-    else if (value == ";")
-        token.type = Type::_keyword;
+    else if (value == ";" || value == "\n")
+        token.type = Type::_end_of_line;
     else if (IsNumber(value))
         token.type = Type::_number;
     return token;
@@ -53,16 +54,18 @@ vector<Token> Tokenize(string text)
             }
             while (std::isalnum(character) && id + 1 < text.size());
 
+
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        else
+        else if (character != ' ')
         {
+            buffer.push_back(character);
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
 
-        //check if id is out of range
+        // check if id is out of range
         if (++id < text.size())
             character = text.at(id);
         else
