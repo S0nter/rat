@@ -1,17 +1,13 @@
 #include <string>
 #include <vector>
-
-#include "basic_functions.h"
-
 using namespace std;
 
 enum Type
 {
     _none,
+    _keyword
     _number,
     _operator,
-    _end,
-    _exit,
 };
 
 struct TokenTree
@@ -28,15 +24,42 @@ struct Token
     string value;
 };
 
-Token AddToken(string value, Type type = Type::_none)
+bool IsOperator(string value)
+{
+    if (character == '+' ||
+        character == '-' ||
+        character == '*' ||
+        character == '/')
+        return true;
+    return false;
+}
+
+bool IsNumber(string value)
+{
+    bool result = false;
+    for (char character : value)
+    {
+        if (!isdigit(character))
+            return false;
+        else
+            result = true;
+    }
+    return result;
+}
+
+Token AddToken(string value)
 {
     Token token;
-    token.type = type;
     token.value = value;
-    if (value == "exit") // keyword handling
-    {
-        token.type = Type::_exit;
-    }
+
+    if (IsOperator(value))
+        token.type = Type::_operator;
+    else if (value == "exit")
+        token.type = Type::_keyword;
+    else if (value == ';')
+        token.type = Type::_keyword;
+    else if (IsNumber(value))
+        token.type = Type::_number;
     return token;
 }
 
@@ -49,52 +72,25 @@ vector<Token> Tokenize(string text)
     string buffer;
     while (true)
     {
-        if (std::isalpha(character))
+        if (std::isalnum(character))
         {
-            std::cout << character << " isalpha" << std::endl;
-            do
-            {
-                std::cout << character << " isalnum" << std::endl;
-                buffer.push_back(character);
-                if (++id < text.size())
-                    character = text.at(id);
-            }
-            while (std::isalnum(character));
-
-            std::cout << "Adding buffer: " << buffer << std::endl;
-
-            tokens.push_back(AddToken(buffer)); // adding string token
-            buffer.clear();
-        }
-        else if (std::isdigit(character))
-        {
-            std::cout << character << " isdigit" << std::endl;
             do
             {
                 buffer.push_back(character);
-                if (++id < text.size())
-                    character = text.at(id);
+                character = text.at(++id);
             }
-            while (std::isdigit(character));
-
-            std::cout << "endNumberValue: " << buffer << std::endl;
-
-            tokens.push_back(AddToken(buffer, Type::_number));
+            while (std::isalnum(character) && id + 1 < text.size());
+            
+            tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        else if (isMathOperator(character))
+        else
         {
-            std::cout << character << " isarithmetic" << std::endl;
-
-            buffer.push_back(character);
-            tokens.push_back(AddToken(buffer, Type::_operator));
+            tokens.push_back(AddToken(buffer));
             buffer.clear();
-        }
-        else if (character == '\n' || character == ';')
-        {
-            tokens.push_back(AddToken("", Type::_end));
         }
         
+        //check if id is out of range
         if (++id < text.size())
             character = text.at(id);
         else
