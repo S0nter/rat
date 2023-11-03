@@ -10,7 +10,7 @@ enum Type
     _keyword,
     _number,
     _operator,
-    _end_of_line
+    _linebreak,
 };
 
 struct Token
@@ -31,7 +31,7 @@ Token AddToken(string value)
     else if (value == "exit")
         token.type = Type::_keyword;
     else if (value == ";" || value == "\n")
-        token.type = Type::_end_of_line;
+        token.type = Type::_linebreak;
     else if (IsNumber(value))
         token.type = Type::_number;
     return token;
@@ -77,7 +77,7 @@ vector<vector<Token>> Divide(vector<Token> tokens)
     vector<Token> line;
     for (Token token : tokens)
     {
-        if (token.type == Type::_end_of_line)
+        if (token.type == Type::_linebreak)
         {
             if (!line.empty())
             {
