@@ -5,41 +5,25 @@
 
 #include "rat.cpp"
 #include "basic_functions.h"
+#include "test.h"
 
-// static const char USAGE[] =
-// R"(rat [-hso FILE] [--quiet | --verbose] [INPUT ...]
-//
-// -h --help    show this
-// -o FILE      specify output file [default: ./test.txt]
-// --quiet      print less text
-// --verbose    print more text
-// )
-//
-//     Usage:
-//
-//       rat (-h | --help)
-//       rat --version
-//       rat [FILE]
-//       rat [FILE] -o []
-//       rat ship <name> move <x> <y> [--speed=<kn>]
-//       rat ship shoot <x> <y>
-//       rat mine (set|remove) <x> <y> [--moored | --drifting]
-//
-//     Options:
-//       -h --help        Show this screen.
-//       --version     Show version.
-//       --test [NUM | list]    Run test NUM
-// )";
+static const char USAGE[] =
+R"(
 
-bool test()
-{
-    if (
-        IsOperator("*") &&
-        IsOperator("/") &&
-        IsOperator("+") &&
-        IsOperator("-")) return true;
-    return false;
-}
+    Usage:
+      rat (-h | --help)
+      rat --version
+      rat FILE FILE
+      rat --test
+
+
+    Options:
+      -h --help  Show this screen.
+      --version  Show version.
+      --test     Run tests
+)";
+
+
 
 string ReadFile(string name)
 {
@@ -73,23 +57,14 @@ void WriteFile(string name, string content)
 
 int main(int argc, char** argv)
 {
-    // std::map<std::string, docopt::value> args
-    // = docopt::docopt(USAGE,
-    //                  { argv + 1, argv + argc },
-    //                  true,               // show help if requested
-    //                  "We don't know what we're doing");  // version string
-    if (string (argv[1]) == "--test") {
-        if (test())
-        {
-            std::cout << Green("Tests passed") << std::endl;
-            return 0;
-        }
-            std::cout << Red("Test failed") << std::endl;
-        return -1;
-    }
-    if (argc <= 1) {
-        std::cout << "Usage: " << argv[0] << " file.rat out" << std::endl;
-        return 1;
+    std::map<std::string, docopt::value> args
+    = docopt::docopt(USAGE,
+                     { argv + 1, argv + argc },
+                     true,               // show help if requested
+                     "We don't know what we're doing");  // version string
+    for(auto const& arg : args) {
+        std::cout << arg.first << "|" <<  arg.second << std::endl;
+        if (string (arg.first) == "--test" && arg.second) return test();
     }
     std::cout << "Opening " << argv[1] << std::endl;
     string content = ReadFile(argv[1]);

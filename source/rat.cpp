@@ -31,7 +31,7 @@ Token AddToken(string value)
     else if (value == "exit")
         token.type = Type::_keyword;
     else if (value == ";" || value == "\n")
-        token.type = Type::_end_of_line;
+        token.type = Type::_linebreak;
     else if (IsNumber(value))
         token.type = Type::_number;
     return token;
