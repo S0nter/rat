@@ -10,7 +10,7 @@ enum Type
     _keyword,
     _number,
     _operator,
-    _linebreak
+    _linebreak,
 };
 
 struct Token
