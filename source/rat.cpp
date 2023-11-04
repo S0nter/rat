@@ -42,30 +42,30 @@ vector<Token> Tokenize(string text)
     vector<Token> tokens;
 
     int id = 0;
-    char character = text.at(id);
+    char character;
     string buffer;
-    while (id < text.size())
+    while (id < int(text.size()))
     {
-        if (std::isalnum(character))
+        character = text.at(id);
+        if (std::isalpha(character))
         {
-            do
+            while (std::isalnum(character))
             {
                 buffer.push_back(character);
-                character = text.at(++id);
+                if (id + 1 < int(text.size()))
+                    character = text.at(++id);
+                else
+                    break;
             }
-            while (std::isalnum(character) && id + 1 < text.size());
+            // else if (character != ' ') // FIXME: doesn't exist in c++
+            //     tokens.push_back(AddToken(character));
 
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
         else if (character != ' ')
-        {
-            buffer.push_back(character);
-            tokens.push_back(AddToken(buffer));
-            buffer.clear();
-        }
-        if (++id + 1 < text.size())
-            character = text.at(id);
+            tokens.push_back(AddToken(std::string(1, character)));
+        id++;
     }
 
     return tokens;
@@ -86,10 +86,13 @@ vector<vector<Token>> Divide(vector<Token> tokens)
             }
         }
         else
-            line.push_back(token); // push token to line
+            line.push_back(token); // add something to line
     }
-    if (!line.empty()) // push last line
+    if (!line.empty()) // recheck again if something was on line
+    {
         lines.push_back(line);
+        line.clear();
+    }
     return lines;
 }
 
@@ -99,9 +102,7 @@ Token Parse(vector<Token> line)
     for (Token token : line)
     {
         if (token.type == Type::_keyword)
-        {
             root = token;
-        }
     }
     return root;
 }
@@ -115,7 +116,7 @@ string Convert(vector<Token> tokens)
 
     for (Token token : tokens)
     {
-        if (token.type == Type::_keyword && token.value == "exit") // exit
+        if (token.type == Type::_keyword && token.value == "exit")
         {
             output += "mov rax, 60\n";
             output += "mov rdi, " + token.right->value + '\n';
