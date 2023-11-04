@@ -44,7 +44,7 @@ vector<Token> Tokenize(string text)
     int id = 0;
     char character;
     string buffer;
-    while (id < text.size())
+    while (id < int(text.size()))
     {
         character = text.at(id);
         if (std::isalpha(character))
@@ -52,19 +52,19 @@ vector<Token> Tokenize(string text)
             while (std::isalnum(character))
             {
                 buffer.push_back(character);
-                if (id + 1 < text.size())
+                if (id + 1 < int(text.size()))
                     character = text.at(++id);
                 else
                     break;
             }
-            else if (character != ' ')
-                tokens.push_back(AddToken(character));
+            // else if (character != ' ') // FIXME: doesn't exist in c++
+            //     tokens.push_back(AddToken(character));
 
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
         else if (character != ' ')
-            tokens.push_back(AddToken(character));
+            tokens.push_back(AddToken(std::string(1, character)));
         id++;
     }
 

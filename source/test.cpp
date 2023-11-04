@@ -5,36 +5,49 @@
 #include "basic_functions.h"
 
 
-using test_func=std::function<bool()>;
+bool testIsOperator()
+{
+    if (IsOperator("*") &&
+        IsOperator("/") &&
+        IsOperator("+") &&
+        IsOperator("-")) return true;
+    return false;
+}
 
-
-// create a map object
-std::vector<test_func> test_functions {
-    {"+", plus<long>()},
-    {"-", minus<long>()},
-    {"/", divides<long>()},
-    {"*", multiplies<long>()}
+// tests
+std::vector<std::function<bool()>> test_functions {
+    testIsOperator,
 };
-
-bool TestIsOperator()
-    {
-        if (IsOperator("*") &&
-            IsOperator("/") &&
-            IsOperator("+") &&
-            IsOperator("-")) return true;
-        return false;
-    };
-    
-map <int, fptr>
+   
 int test(int number = -1)
 {
-    
-    if (TestIsOperator())
+    bool failed = false;
+    if (number == -1) // all tests
     {
-        std::cout << Green("Tests passed") << std::endl;
-        return 0;
+        
+        for (int i = 0 ; i < int(test_functions.size()); i++) 
+        {
+            if (test_functions[i]()) 
+                std::cout << Green("Test " + std::to_string(i) + " passed") << std::endl;
+            else
+            {
+                std::cout << Red("Test " + std::to_string(i) + " failed") << std::endl;
+                failed = true;
+            }
+        }
     }
-    std::cout << Red("Test failed") << std::endl;
-    return -1;
-    
+    else
+    {
+        if (test_functions[number])
+        {
+            std::cout << Green("Test " + std::to_string(number) + " passed") << std::endl;
+        }
+        else
+        {
+            std::cout << Red("Test " + std::to_string(number) + " failed") << std::endl;
+            failed = true;
+        }
+    }
+    if (failed) return -1;
+    else return 0;
 }

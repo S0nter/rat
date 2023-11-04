@@ -10,21 +10,27 @@
 static const char USAGE[] =
 R"(
 
-    Usage:
-      rat (-h | --help)
+    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--tests | --test NUM]]
+      
+      rat FILE -o FILE
+      rat --tests
+      rat --test NUM
+      rat -h | --help
       rat --version
-      rat FILE FILE
-      rat --test
+
 
 
     Options:
-      -h --help  Show this screen.
-      --version  Show version.
-      --test     Run tests
+      -h --help   Show this screen
+      --version   Show version
+      --tests     Run all tests, same as --test -1
+      --test NUM  Run test NUM
+      FILE        Input file
+      -o FILE     Output file
 )";
 
-
-
+      // rat --version
+      // --version   Show version.
 string ReadFile(string name)
 {
     fstream file;
@@ -57,19 +63,27 @@ void WriteFile(string name, string content)
 
 int main(int argc, char** argv)
 {
+    std::string input_file = "";
+    std::string output_file = "";
+    
+    // parser for command line arguments
     std::map<std::string, docopt::value> args
     = docopt::docopt(USAGE,
                      { argv + 1, argv + argc },
-                     true,               // show help if requested
-                     "We don't know what we're doing");  // version string
+                     true,      // show help if requested
+                     "0.0.1");  // version string
+    
     for(auto const& arg : args) {
-        std::cout << arg.first << "|" <<  arg.second << std::endl;
-        if (string (arg.first) == "--test" && arg.second) return test();
+        if (string (arg.first) == "--tests" && arg.second.asBool()) return test(-1);
+        else if (string (arg.first) == "--test" && arg.second.isString()) return test(stoi(arg.second.asString()));
+        else if (string (arg.first) == "FILE" && arg.second.isString()) input_file = arg.second.asString();
+        else if (string (arg.first) == "-o" && arg.second.isString()) output_file = arg.second.asString();
     }
-    std::cout << "Opening " << argv[1] << std::endl;
-    string content = ReadFile(argv[1]);
+
+    std::cout << "Opening " << input_file << std::endl;
+    string content = ReadFile(input_file);
 
     string output = Compile(content);
-    WriteFile(argv[2], output);
+    WriteFile(output_file, output);
     return 0;
 }

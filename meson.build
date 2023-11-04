@@ -12,10 +12,14 @@ project(
 
 src = [
     'source/main.cpp',
-    'source/basic_functions.cpp'
+    'source/basic_functions.cpp',
+    'source/test.cpp',
 ]
 
 executable('rat',
            sources: src,
-           dependencies: [dependency('docopt')]  # docopt - cli args parser
+           dependencies: [
+           dependency('docopt'),  # cli args parser
+#            dependency('nasm'),    # assembler
+           ]
 )
