@@ -7,7 +7,7 @@
     
 #### Examples:
 This is how you shouldn't write code:
-```
+```cpp
 void foo(int bar_qux) {
     vector<int> baz {
     1, 2,3,
@@ -20,7 +20,7 @@ void foo(int bar_qux) {
 
 
 And this is how you should:
-```
+```cpp
 void Foo(int barQux)
 {
     vector<int> baz 
