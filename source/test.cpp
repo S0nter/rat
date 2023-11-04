@@ -15,7 +15,8 @@ bool testIsOperator()
 }
 
 // tests
-std::vector<std::function<bool()>> test_functions {
+std::vector<std::function<bool()>> test_functions
+{
     testIsOperator,
 };
    

@@ -41,14 +41,3 @@ std::string Quote(std::string str)
 {
     return "\"" + str + "\"";
 }
-
-bool all(std::vector<bool> iter)
-{
-    for (auto i : iter)
-    {
-        if (!i) return false;
-    }
-    return true;
-}
-
-
