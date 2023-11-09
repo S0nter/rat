@@ -42,30 +42,30 @@ vector<Token> Tokenize(string text)
     vector<Token> tokens;
 
     int id = 0;
-    char character;
+    char character = text.at(id);
     string buffer;
-    while (id < int(text.size()))
+    while (id < text.size())
     {
-        character = text.at(id);
-        if (std::isalpha(character))
+        if (std::isalnum(character))
         {
-            while (std::isalnum(character))
+            do
             {
                 buffer.push_back(character);
-                if (id + 1 < int(text.size()))
-                    character = text.at(++id);
-                else
-                    break;
+                character = text.at(++id);
             }
-            // else if (character != ' ') // FIXME: doesn't exist in c++
-            //     tokens.push_back(AddToken(character));
+            while (std::isalnum(character) && id + 1 < text.size());
 
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
         else if (character != ' ')
-            tokens.push_back(AddToken(std::string(1, character)));
-        id++;
+        {
+            buffer.push_back(character);
+            tokens.push_back(AddToken(buffer));
+            buffer.clear();
+        }
+        if (++id + 1 < text.size())
+            character = text.at(id);
     }
 
     return tokens;
