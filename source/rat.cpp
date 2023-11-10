@@ -119,8 +119,10 @@ Token *Parse(vector<Token> tokens, int from, int to)
             last = id;
         }
     }
-    token->left = Parse(tokens, 0, last);
-    token->right = Parse(tokens, last, tokens.size());
+    if (last > 0)
+        token->left = Parse(tokens, 0, last);
+    if (last < tokens.size())
+        token->right = Parse(tokens, last, tokens.size());
     return token;
 }
 
