@@ -52,31 +52,25 @@ Token AddToken(string value)
 vector<Token> Tokenize(string text)
 {
     vector<Token> tokens;
-
-    int id = 0;
-    char character = text.at(id);
     string buffer;
-    while (id < text.size())
+    for (char character : text)
     {
-        if (std::isalnum(character))
+        if (std::isalnum(character)) // check if character is alpha-numeric (abcd... or 1234...)
         {
-            do
-            {
-                buffer.push_back(character);
-                character = text.at(++id);
-            } while (std::isalnum(character) && id + 1 < text.size());
-
+            buffer.push_back(character);
+            continue;
+        }
+        else if (!buffer.empty())
+        {
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        else if (character != ' ')
+        if (character != ' ')
         {
             buffer.push_back(character);
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        if (++id + 1 < text.size())
-            character = text.at(id);
     }
 
     return tokens;
@@ -110,7 +104,7 @@ vector<vector<Token>> Divide(vector<Token> tokens)
 Token *Parse(vector<Token> tokens, int from, int to)
 {
     Token *token = &tokens.at(from);
-    int last;
+    int last = -1;
     for (int id = from; id < to; id++)
     {
         if (tokens.at(id).priority > token->priority)
@@ -119,10 +113,11 @@ Token *Parse(vector<Token> tokens, int from, int to)
             last = id;
         }
     }
-    if (last > 0)
+    if (last != -1)
+    {
         token->left = Parse(tokens, 0, last);
-    if (last < tokens.size())
-        token->right = Parse(tokens, last, tokens.size());
+        token->right = Parse(tokens, last, tokens.size() - 1);
+    }
     return token;
 }
 
