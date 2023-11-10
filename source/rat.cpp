@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream> // DEBUG
 #include <vector>
 #include "basic_functions.h"
 
@@ -72,7 +73,12 @@ vector<Token> Tokenize(string text)
             buffer.clear();
         }
     }
-
+    ///
+    cout << "Tokenize:" << endl;
+    for (Token token : tokens)
+        cout << "[" << token.type << ": " << token.value << "]" << endl;
+    cout << endl << endl;
+    ///
     return tokens;
 }
 
@@ -115,9 +121,18 @@ Token *Parse(vector<Token> tokens, int from, int to)
     }
     if (last != -1)
     {
+        ///
+        cout << "\t";
+        ///
         token->left = Parse(tokens, 0, last);
-        token->right = Parse(tokens, last, tokens.size() - 1);
+        ///
+        cout << "\t";
+        ///
+        token->right = Parse(tokens, last + 1, tokens.size() - 1);
     }
+    ///
+    cout << "[" << token->type << ": " << token->value << "]" << endl;
+    ///
     return token;
 }
 
@@ -147,7 +162,7 @@ string Compile(string text)
 
     vector<Token*> trees;
     for (vector<Token> line : lines)
-        trees.push_back(Parse(line, 0, line.size()));
+        trees.push_back(Parse(line, 0, line.size() - 1));
     string output = Convert(trees);
     return output;
 }
