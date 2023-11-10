@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include <docopt.h>
+#include "docopt/docopt.h"
 
 #include "rat.cpp"
 #include "basic_functions.h"
@@ -29,8 +29,6 @@ R"(
       -o FILE     Output file
 )";
 
-      // rat --version
-      // --version   Show version.
 string ReadFile(string name)
 {
     fstream file;
