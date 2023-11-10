@@ -19,7 +19,6 @@ R"(
       rat --version
 
 
-
     Options:
       -h --help   Show this screen
       --version   Show version
