@@ -17,6 +17,7 @@ struct Token
 {
     Type type = Type::_none;
     string value;
+    int priority;
     struct Token* left;
     struct Token* right;
 };
@@ -27,13 +28,24 @@ Token AddToken(string value)
     token.value = value;
 
     if (IsOperator(value))
+    {
         token.type = Type::_operator;
+        token.priority = 1;
+    }
     else if (value == "exit")
+    {
         token.type = Type::_keyword;
+        token.priority = 2;
+    }
     else if (value == ";" || value == "\n")
+    {
         token.type = Type::_linebreak;
+    }
     else if (IsNumber(value))
+    {
         token.type = Type::_number;
+        token.priority = 0;
+    }
     return token;
 }
 
@@ -96,15 +108,21 @@ vector<vector<Token>> Divide(vector<Token> tokens)
     return lines;
 }
 
-Token Parse(vector<Token> line)
+Token Parse(vector<Token> tokens, int from, int to)
 {
-    Token root;
-    for (Token token : line)
+    Token token = tokens.at(from);
+    int last;
+    for (int id = from; id < to; id++)
     {
-        if (token.type == Type::_keyword)
-            root = token;
+        if (tokens.at(id).priotity > token.priority)
+        {
+            token = token.at(id);
+            last = id;
+        }
     }
-    return root;
+    token.left = Parse(tokens, 0, last);
+    token.right = Parse(tokens, last, tokens.size());
+    return token;
 }
 
 string Convert(vector<Token> tokens)
@@ -133,7 +151,7 @@ string Compile(string text)
 
     vector<Token> trees;
     for (vector<Token> lines : lines)
-        trees.push_back(Parse(lines));
+        trees.push_back(Parse(line, 0, line.size());
     
     string output = Convert(trees);
     return output;
