@@ -19,8 +19,8 @@ struct Token
     Type type = Type::_none;
     string value = "";
     int priority = 0;
-    struct Token *left;
-    struct Token *right;
+    struct Token *left = nullptr;
+    struct Token *right = nullptr;
 };
 
 Token AddToken(string value)
@@ -110,7 +110,7 @@ vector<vector<Token>> Divide(vector<Token> tokens) // divides vector of tokens o
 Token *Parse(vector<Token> tokens, int from, int to) // converts line to token tree
 {
     Token *token = &tokens.at(from);
-    int index = 0;
+    int index = from;
     for (int i = from; i < to; i++) // iterate through every token from from to to
     {
         if (tokens.at(i).priority > token->priority)
