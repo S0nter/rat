@@ -2,29 +2,35 @@
  - functions, structs, enums, etc. should be in ***PascalCase***
  - variable names should be in ***camelCase***
  - ***curly brackets*** after the function definition, etc. should be on the next line
+ - ***spacing*** have to be persistent
  - ***commas*** should be at the end of iterable (when possible) to reduce occasional errors
  - you should use ***std::*** but it's not that necessary
+ - ***comments*** shoud be meaningfull and neat
+ - ***names*** HAVE TO MAKE SENCE
+ - it's always better to write ***safe*** and foolproof ***code***
     
 ### Examples:
 
-This is how you ***shouldn't*** write code:
+**Ugly** code:
 ```cpp
-void foo(int bar_qux) {
-    vector<int> baz {
+void fun (int t_i) {
+    vector < int> t {
     1, 2,3,
         4,
         5
     };
-    cout << bar_qux << endl;
+
+    
+    cout<< t.at ( t_id) <<endl;//get t at t_i
 }
 ```
 
 
-And this is how you ***should***:
+**Neat** code:
 ```cpp
-void Foo(int barQux)
+void GetToken(int indexOfToken)
 {
-    vector<int> baz 
+    vector<int> tokens 
     {
         1,
         2,
@@ -32,8 +38,7 @@ void Foo(int barQux)
         4,
         5,
     };
-    std::cout << barQux << std::endl;
+    if (indexOfToken >= 0 && indexOfToken < tokens.size())
+        std::cout << tokens.at(indexOfToken) << std::endl; // print token at indexOfToken
 }
 ```
-
-## Documentation:
