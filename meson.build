@@ -20,8 +20,4 @@ subdir('lib/docopt')
 
 executable('rat',
            sources: src,
-           dependencies: [
-           dependency('docopt'),  # cli args parser
-#            dependency('nasm'),    # assembler
-           ]
 )

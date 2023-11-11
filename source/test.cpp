@@ -14,10 +14,17 @@ bool testIsOperator()
     return false;
 }
 
+bool testTokenize1()
+{
+    
+    return false;
+}
+
 // tests
 std::vector<std::function<bool()>> test_functions
 {
     testIsOperator,
+    testTokenize1,
 };
    
 int test(int number = -1)
@@ -37,9 +44,14 @@ int test(int number = -1)
             }
         }
     }
+    else if (number > test_functions.size() - 1)
+    {
+        std::cout << Red("Test " + std::to_string(number) + " does not exist") << std::endl;
+        failed = true;
+    }
     else
     {
-        if (test_functions[number])
+        if (test_functions[number]())
         {
             std::cout << Green("Test " + std::to_string(number) + " passed") << std::endl;
         }
