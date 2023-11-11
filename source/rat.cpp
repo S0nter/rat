@@ -107,39 +107,28 @@ vector<vector<Token>> Divide(vector<Token> tokens) // divides vector of tokens o
     return lines;
 }
 
-Token *Parse(vector<Token> tokens, int from, int to) // converts line to token tree
+Token *Parse(vector<Token> *tokens, int from, int to) // converts line to token tree
 {
-    Token *token = &tokens.at(from);
+    Token *token = &tokens->at(from);
     int index = from;
     for (int i = from; i < to; i++) // iterate through every token from from to to
     {
-        if (tokens.at(i).priority > token->priority)
+        if (tokens->at(i).priority > token->priority)
         {
-            token = &tokens.at(i);
+            token = &tokens->at(i);
             index = i;
         }
     }
     if (index > from)
-    {
-        /// debug
-        cout << "\t";
-        ///
         token->left = Parse(tokens, from, index - 1); // find highest token from left
-    }
     else
         token->left = nullptr;
+    
     if (index < to)
-    {
-        ///
-        cout << "\t";
-        ///
         token->right = Parse(tokens, index + 1, to); // find highest token from right
-    }
     else
         token->right = nullptr;
-    /// debug
-    cout << "[" << token->type << ": " << token->value << "]" << endl;
-    ///
+    
     return token;
 }
 
@@ -162,14 +151,38 @@ string Convert(vector<Token*> tokens)
     return output;
 }
 
+void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
+{
+    if( node != nullptr )
+    {
+        std::cout << prefix;
+
+        std::cout << (isLeft ? "|---" : "|__" );
+
+        // print the value of the node
+        std::cout << "type: " << node->type << " value: " << node->value << " priority: " << node->priority << std::endl;
+
+        // enter the next tree level - left and right branch
+        PrintTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
+        PrintTree( prefix + (isLeft ? "│   " : "    "), node->right, false);
+    }
+}
+
 string Compile(string text)
 {
     vector<Token> tokens = Tokenize(text); // get all tokens
     vector<vector<Token>> lines = Divide(tokens); // divide them on lines
 
-    vector<Token*> trees;
+    vector<Token*> trees = {nullptr,};
     for (vector<Token> line : lines)
-        trees.push_back(Parse(line, 0, line.size() - 1)); // convert each line to tree
+    {
+        trees.push_back(Parse(&line, 0, line.size() - 1)); // convert each line to tree
+    }
+    
+    /// debug
+    for (Token *token : trees)
+        PrintTree("", token, false);
+    ///
 
     string output = Convert(trees); // convert to assembly code
     return output;

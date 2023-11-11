@@ -1,5 +1,9 @@
+# IDEs:
 /.kdev4/
-/build
 *.kdev4
+/.vscode
+
+# Build:
+/build
+/builddir
 *.asm
-/out.asm
