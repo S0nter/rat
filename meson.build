@@ -16,6 +16,8 @@ src = [
     'source/test.cpp',
 ]
 
+subdir('source/docopt')
+
 executable('rat',
            sources: src,
            dependencies: [

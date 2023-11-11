@@ -1,4 +1,5 @@
 #include <string>
+#include <iostream> // DEBUG
 #include <vector>
 #include "basic_functions.h"
 
@@ -18,8 +19,8 @@ struct Token
     Type type = Type::_none;
     string value;
     int priority;
-    struct Token* left;
-    struct Token* right;
+    struct Token *left;
+    struct Token *right;
 };
 
 Token AddToken(string value)
@@ -52,34 +53,32 @@ Token AddToken(string value)
 vector<Token> Tokenize(string text)
 {
     vector<Token> tokens;
-
-    int id = 0;
-    char character = text.at(id);
     string buffer;
-    while (id < text.size())
+    for (char character : text)
     {
-        if (std::isalnum(character))
+        if (std::isalnum(character)) // check if character is alpha-numeric (abcd... or 1234...)
         {
-            do
-            {
-                buffer.push_back(character);
-                character = text.at(++id);
-            }
-            while (std::isalnum(character) && id + 1 < text.size());
-
+            buffer.push_back(character);
+            continue;
+        }
+        else if (!buffer.empty())
+        {
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        else if (character != ' ')
+        if (character != ' ')
         {
             buffer.push_back(character);
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
-        if (++id + 1 < text.size())
-            character = text.at(id);
     }
-
+    ///
+    cout << "Tokenize:" << endl;
+    for (Token token : tokens)
+        cout << "[" << token.type << ": " << token.value << "]" << endl;
+    cout << endl << endl;
+    ///
     return tokens;
 }
 
@@ -108,36 +107,48 @@ vector<vector<Token>> Divide(vector<Token> tokens)
     return lines;
 }
 
-Token Parse(vector<Token> tokens, int from, int to)
+Token *Parse(vector<Token> tokens, int from, int to)
 {
-    Token token = tokens.at(from);
-    int last;
+    Token *token = &tokens.at(from);
+    int last = -1;
     for (int id = from; id < to; id++)
     {
-        if (tokens.at(id).priotity > token.priority)
+        if (tokens.at(id).priority > token->priority)
         {
-            token = token.at(id);
+            token = &tokens.at(id);
             last = id;
         }
     }
-    token.left = Parse(tokens, 0, last);
-    token.right = Parse(tokens, last, tokens.size());
+    if (last != -1)
+    {
+        ///
+        cout << "\t";
+        ///
+        token->left = Parse(tokens, 0, last);
+        ///
+        cout << "\t";
+        ///
+        token->right = Parse(tokens, last + 1, tokens.size() - 1);
+    }
+    ///
+    cout << "[" << token->type << ": " << token->value << "]" << endl;
+    ///
     return token;
 }
 
-string Convert(vector<Token> tokens)
+string Convert(vector<Token*> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (Token token : tokens)
+    for (Token *token : tokens)
     {
-        if (token.type == Type::_keyword && token.value == "exit")
+        if (token->type == Type::_keyword && token->value == "exit")
         {
             output += "mov rax, 60\n";
-            output += "mov rdi, " + token.right->value + '\n';
+            output += "mov rdi, " + token->right->value + '\n';
             output += "syscall\n";
         }
     }
@@ -149,10 +160,9 @@ string Compile(string text)
     vector<Token> tokens = Tokenize(text);
     vector<vector<Token>> lines = Divide(tokens);
 
-    vector<Token> trees;
-    for (vector<Token> lines : lines)
-        trees.push_back(Parse(line, 0, line.size());
-    
+    vector<Token*> trees;
+    for (vector<Token> line : lines)
+        trees.push_back(Parse(line, 0, line.size() - 1));
     string output = Convert(trees);
     return output;
 }
