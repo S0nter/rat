@@ -11,4 +11,4 @@
 
 ### Project:
 
- - [Project documentation](documentation/project_rules.md)
+ - [Project conventions](documentation/Conventions.md)
