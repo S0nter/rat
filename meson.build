@@ -16,7 +16,7 @@ src = [
     'source/test.cpp',
 ]
 
-subdir('source/docopt')
+subdir('lib/docopt')
 
 executable('rat',
            sources: src,
