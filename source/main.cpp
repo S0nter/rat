@@ -1,7 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <cstring>
-#include "docopt/docopt.h"
+#include "lib/docopt/docopt.h"
 
 #include "rat.cpp"
 #include "basic_functions.h"

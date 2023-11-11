@@ -16,8 +16,11 @@ src = [
     'source/test.cpp',
 ]
 
-subdir('lib/docopt')
+docopt = library('docopt', 'lib/docopt/docopt.cpp')
 
-executable('rat',
+rat = executable('rat',
            sources: src,
+           link_with: docopt,
 )
+
+test('All tests', rat, args : ['--tests'])

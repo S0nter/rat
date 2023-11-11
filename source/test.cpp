@@ -16,7 +16,7 @@ bool testIsOperator()
 
 bool testTokenize1()
 {
-    
+    // FIXME
     return false;
 }
 
@@ -44,7 +44,7 @@ int test(int number = -1)
             }
         }
     }
-    else if (number > test_functions.size() - 1)
+    else if (number > int(test_functions.size()) - 1)
     {
         std::cout << Red("Test " + std::to_string(number) + " does not exist") << std::endl;
         failed = true;
