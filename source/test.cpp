@@ -1,8 +1,10 @@
 #include <iostream>
 #include <vector>
 #include <bits/stdc++.h>
+#include <string>
 
 #include "basic_functions.h"
+#include "rat.h"
 
 
 bool testIsOperator()
@@ -14,10 +16,32 @@ bool testIsOperator()
     return false;
 }
 
+bool IsEqual(std::vector<Token> vector1, std::vector<Token> vector2)
+{
+    if (vector1.size() != vector2.size()) return false;
+    for (int i=0; i<vector1.size(); i++)
+    {
+        if (
+            vector1[i].value != vector2[i].value ||
+            vector1[i].priority != vector2[i].priority ||
+            vector1[i].type != vector2[i].type
+        ) return false;
+    }
+    return true;
+}
+
 bool testTokenize1()
 {
-    // FIXME
-    return false;
+    std::string test_str = "exit 13*  3\n"; // file doesn't always end with  "\n"
+    std::vector<Token> correct_result = {
+        AddToken("exit"),
+        AddToken("13"),
+        AddToken("*"),
+        AddToken("3"),
+        AddToken("\n"),
+    };
+    std::vector<Token> test_result = Tokenize(test_str);
+    return IsEqual(test_result, correct_result);
 }
 
 // tests

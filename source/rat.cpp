@@ -1,27 +1,11 @@
 #include <string>
 #include <iostream> // DEBUG
 #include <vector>
+
 #include "basic_functions.h"
+#include "rat.h"
 
 using namespace std;
-
-enum Type
-{
-    _none,
-    _keyword,
-    _number,
-    _operator,
-    _linebreak,
-};
-
-struct Token
-{
-    Type type = Type::_none;
-    string value = "";
-    int priority = 0;
-    struct Token *left = nullptr;
-    struct Token *right = nullptr;
-};
 
 Token AddToken(string value)
 {
