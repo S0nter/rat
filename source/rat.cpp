@@ -73,12 +73,6 @@ vector<Token> Tokenize(string text)
             buffer.clear();
         }
     }
-    /// debug
-    cout << "Tokenize:" << endl;
-    for (Token token : tokens)
-        cout << "[" << token.type << ": " << token.value << "]" << endl;
-    cout << endl << endl;
-    ///
     return tokens;
 }
 
@@ -111,6 +105,7 @@ Token *Parse(vector<Token> *tokens, int from, int to) // converts line to token 
 {
     Token *token = &tokens->at(from);
     int index = from;
+
     for (int i = from; i < to; i++) // iterate through every token from from to to
     {
         if (tokens->at(i).priority > token->priority)
@@ -119,15 +114,16 @@ Token *Parse(vector<Token> *tokens, int from, int to) // converts line to token 
             index = i;
         }
     }
+
     if (index > from)
         token->left = Parse(tokens, from, index - 1); // find highest token from left
     else
-        token->left = nullptr;
+        token->left = nullptr; // no tokens from left
     
     if (index < to)
         token->right = Parse(tokens, index + 1, to); // find highest token from right
     else
-        token->right = nullptr;
+        token->right = nullptr; // no tokens from right
     
     return token;
 }
@@ -157,10 +153,10 @@ void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
     {
         std::cout << prefix;
 
-        std::cout << (isLeft ? "|---" : "|__" );
+        std::cout << "|__";
 
         // print the value of the node
-        std::cout << "type: " << node->type << " value: " << node->value << " priority: " << node->priority << std::endl;
+        std::cout << "[" << node->type << "; " << node->value << "]" << std::endl;
 
         // enter the next tree level - left and right branch
         PrintTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
@@ -173,10 +169,10 @@ string Compile(string text)
     vector<Token> tokens = Tokenize(text); // get all tokens
     vector<vector<Token>> lines = Divide(tokens); // divide them on lines
 
-    vector<Token*> trees = {nullptr,};
-    for (vector<Token> line : lines)
+    vector<Token*> trees;
+    for (size_t i = 0; i < lines.size(); i++)
     {
-        trees.push_back(Parse(&line, 0, line.size() - 1)); // convert each line to tree
+        trees.push_back(Parse(&lines.at(i), 0, lines.at(i).size() - 1)); // convert each line to tree
     }
     
     /// debug
