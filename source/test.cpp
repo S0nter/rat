@@ -6,60 +6,150 @@
 #include "basic_functions.h"
 #include "rat.h"
 
-
-bool testIsOperator()
+bool CompareTokens(Token token1, Token token2)
 {
-    if (IsOperator("*") &&
-        IsOperator("/") &&
-        IsOperator("+") &&
-        IsOperator("-")) return true;
-    return false;
+    if (token1.type != token2.type || token1.value != token2.value || token1.priority != token2.priority)
+        return false;
+    else
+    {
+        if (token1.left == token2.left && token1.right == token2.right)
+            return true;
+        if (token1.left != token2.left)
+        {
+            if (!CompareTokens(*token1.left, *token2.left))
+                return false;
+        }
+        if (token1.right != token2.right)
+        {
+            if (!CompareTokens(*token1.right, *token2.right))
+                return false;
+        }
+        return true;
+    }
 }
 
-bool IsEqual(std::vector<Token> vector1, std::vector<Token> vector2)
+bool CompareLines(std::vector<Token> vector1, std::vector<Token> vector2)
 {
-    if (vector1.size() != vector2.size()) return false;
-    for (int i=0; i<vector1.size(); i++)
+    if (vector1.size() != vector2.size())
+        return false;
+    for (size_t i = 0; i < vector1.size(); i++)
     {
-        if (
-            vector1[i].value != vector2[i].value ||
-            vector1[i].priority != vector2[i].priority ||
-            vector1[i].type != vector2[i].type
-        ) return false;
+        if (!CompareTokens(vector1.at(i), vector2.at(i)))
+            return false;
     }
     return true;
 }
 
-bool testTokenize1()
+bool TestAddToken()
 {
-    std::string test_str = "exit 13*  3\n"; // file doesn't always end with  "\n"
-    std::vector<Token> correct_result = {
-        AddToken("exit"),
-        AddToken("13"),
-        AddToken("*"),
-        AddToken("3"),
-        AddToken("\n"),
-    };
-    std::vector<Token> test_result = Tokenize(test_str);
-    return IsEqual(test_result, correct_result);
+    std::string buffer = "69"; // test buffer
+    // expected values:
+    Token expected;
+    expected.type = Type::_number;
+    expected.value = "69";
+    expected.priority = 1;
+    expected.left = nullptr;
+    expected.right = nullptr;
+
+    Token result = AddToken(buffer);
+    return CompareTokens(result, expected);
 }
 
-// tests
-std::vector<std::function<bool()>> test_functions
+bool TestTokenize()
 {
-    testIsOperator,
-    testTokenize1,
+    std::string text = "exit 60 + 9"; // test text
+    // expected values:
+    std::vector<Token> expected = {
+        AddToken("exit"),
+        AddToken("60"),
+        AddToken("+"),
+        AddToken("9"),
+        AddToken("\n"),
+    };
+    std::vector<Token> result = Tokenize(text);
+    return CompareLines(result, expected);
+}
+
+bool TestDivide()
+{
+    std::vector<Token> tokens = { // test tokens
+        AddToken("60"),
+        AddToken("+"),
+        AddToken("9"),
+        AddToken(";"),
+        AddToken("blah"),
+    };
+    // expected values:
+    std::vector<std::vector<Token>> expected = {
+        { AddToken("60"), AddToken("+"), AddToken("9"), },
+        { AddToken("blah"), },
+    };
+    std::vector<std::vector<Token>> result = Divide(tokens);
+    for (size_t i = 0; i < result.size(); i++)
+    {
+        if (!CompareLines(result.at(i), expected.at(i)))
+            return false;
+    }
+    return true;
+}
+
+bool TestParse()
+{
+    std::vector<Token> tokens = { // test tokens
+        AddToken("exit"),
+        AddToken("60"),
+        AddToken("+"),
+        AddToken("9"),
+    };
+    // expected values:
+    Token expected = AddToken("exit");
+    expected.left = nullptr;
+    Token right = AddToken("+");
+    expected.right = &right;
+    Token rightLeft = AddToken("60");
+    Token rightRight = AddToken("9");
+    expected.right->left = &rightLeft;
+    expected.right->right = &rightRight;
+
+    Token* result = Parse(&tokens, 0, tokens.size() - 1);
+    return CompareTokens(expected, *result);
+}
+
+bool TestConvert()
+{
+    std::vector<Token> tokens = { // test tokens
+        AddToken("exit"),
+        AddToken("60"),
+        AddToken("+"),
+        AddToken("9"),
+    };
+
+    // expected values:
+    std::string expected;
+    expected += "section .text\n";
+    expected += "global _start\n";
+    expected += "_start:\n";
+
+    return Convert(tokens) == expected;
+}
+
+std::vector<std::function<bool()>> tests
+{
+    TestAddToken,
+    TestTokenize,
+    TestDivide,
+    TestParse,
+    TestConvert,
 };
    
-int test(int number = -1)
+int Test(size_t index = 0)
 {
     bool failed = false;
-    if (number == -1) // all tests
+    if (index >= tests.size()) // test all
     {
-        
-        for (int i = 0 ; i < int(test_functions.size()); i++) 
+        for (size_t i = 0 ; i < tests.size(); i++) 
         {
-            if (test_functions[i]()) 
+            if (tests.at(i)()) 
                 std::cout << Green("Test " + std::to_string(i) + " passed") << std::endl;
             else
             {
@@ -68,23 +158,23 @@ int test(int number = -1)
             }
         }
     }
-    else if (number > int(test_functions.size()) - 1)
+    else // test index
     {
-        std::cout << Red("Test " + std::to_string(number) + " does not exist") << std::endl;
-        failed = true;
-    }
-    else
-    {
-        if (test_functions[number]())
-        {
-            std::cout << Green("Test " + std::to_string(number) + " passed") << std::endl;
-        }
+        if (tests.at(index)())
+            std::cout << Green("Test " + std::to_string(index) + " passed") << std::endl;
         else
         {
-            std::cout << Red("Test " + std::to_string(number) + " failed") << std::endl;
+            std::cout << Red("Test " + std::to_string(index) + " failed") << std::endl;
             failed = true;
         }
     }
-    if (failed) return -1;
-    else return 0;
+    // else // index error
+    // {
+    //     std::cout << Red("Test " + std::to_string(index) + " does not exist") << std::endl;
+    //     failed = true;
+    // }
+    if (failed)
+        return -1;
+    else
+        return 0;
 }

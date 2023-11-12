@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "basic_functions.h"
-#include "rat.h"
+#include "./rat.h"
 
 using namespace std;
 
@@ -112,19 +112,19 @@ Token *Parse(vector<Token> *tokens, int from, int to) // converts line to token 
     return token;
 }
 
-string Convert(vector<Token*> tokens)
+string Convert(vector<Token> tokens)
 {
     string output;
     output += "section .text\n";
     output += "global _start\n";
     output += "_start:\n";
 
-    for (Token *token : tokens)
+    for (Token token : tokens)
     {
-        if (token->type == Type::_keyword && token->value == "exit")
+        if (token.type == Type::_keyword && token.value == "exit")
         {
             output += "mov rax, 60\n";
-            output += "mov rdi, " + token->right->value + '\n';
+            output += "mov rdi, " + token.right->value + '\n';
             output += "syscall\n";
         }
     }
@@ -153,15 +153,15 @@ string Compile(string text)
     vector<Token> tokens = Tokenize(text); // get all tokens
     vector<vector<Token>> lines = Divide(tokens); // divide them on lines
 
-    vector<Token*> trees;
+    vector<Token> trees;
     for (size_t i = 0; i < lines.size(); i++)
     {
-        trees.push_back(Parse(&lines.at(i), 0, lines.at(i).size() - 1)); // convert each line to tree
+        trees.push_back(*Parse(&lines.at(i), 0, lines.at(i).size() - 1)); // convert each line to tree
     }
     
     /// debug
-    for (Token *token : trees)
-        PrintTree("", token, false);
+    for (Token token : trees)
+        PrintTree("", &token, false);
     ///
 
     string output = Convert(trees); // convert to assembly code

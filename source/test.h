@@ -1,3 +1,3 @@
 #pragma once
 
-int test(int number);
+int Test(size_t index);

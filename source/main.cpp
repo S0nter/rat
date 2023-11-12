@@ -22,8 +22,7 @@ R"(
     Options:
       -h --help   Show this screen
       --version   Show version
-      --tests     Run all tests, same as --test -1
-      --test NUM  Run test NUM
+      --test ID   Run test ID if ID is bigger then then amount of tests runs all
       FILE        Input file
       -o FILE     Output file
 )";
@@ -71,8 +70,7 @@ int main(int argc, char** argv)
                      "0.0.1");  // version string
     
     for(auto const& arg : args) {
-        if (string (arg.first) == "--tests" && arg.second.asBool()) return test(-1);
-        else if (string (arg.first) == "--test" && arg.second.isString()) return test(stoi(arg.second.asString()));
+        if (string (arg.first) == "--test" && arg.second.isString()) return Test(stoi(arg.second.asString()));
         else if (string (arg.first) == "FILE" && arg.second.isString()) input_file = arg.second.asString();
         else if (string (arg.first) == "-o" && arg.second.isString()) output_file = arg.second.asString();
     }

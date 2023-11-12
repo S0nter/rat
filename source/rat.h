@@ -28,6 +28,6 @@ std::vector<std::vector<Token>> Divide(std::vector<Token> tokens); // divides ve
 
 Token *Parse(std::vector<Token> *tokens, int from, int to); // converts line to list of token trees
 
-std::string Convert(std::vector<Token*> tokens); // converts list of token trees to assmebly code
+std::string Convert(std::vector<Token> tokens); // converts list of token trees to assmebly code
 
 std::string Compile(std::string text); // converts rat file to assmebly code
