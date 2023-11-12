@@ -23,4 +23,15 @@ rat = executable('rat',
            link_with: docopt,
 )
 
-test('All tests', rat, args : ['--tests'])
+tests = [
+    'AddToken test 1',
+    'Tokenize test 1',
+    'Divide test 1',
+    'Parse test 1',
+    'Convert test 1',
+]
+
+foreach i : range(tests.length())
+  test(tests[i], rat, args : ['--test', i.to_string()])
+endforeach
+
