@@ -142,10 +142,10 @@ std::vector<std::function<bool()>> tests
     TestConvert,
 };
    
-int Test(size_t index = 0)
+int Test(int index = -1)
 {
     bool failed = false;
-    if (index >= tests.size()) // test all
+    if (index < 0) // test all
     {
         for (size_t i = 0 ; i < tests.size(); i++) 
         {
@@ -158,7 +158,7 @@ int Test(size_t index = 0)
             }
         }
     }
-    else // test index
+    else if (index < int(tests.size())) // test index
     {
         if (tests.at(index)())
             std::cout << Green("Test " + std::to_string(index) + " passed") << std::endl;
@@ -168,11 +168,11 @@ int Test(size_t index = 0)
             failed = true;
         }
     }
-    // else // index error
-    // {
-    //     std::cout << Red("Test " + std::to_string(index) + " does not exist") << std::endl;
-    //     failed = true;
-    // }
+    else // index error
+    {
+        std::cout << Red("Test " + std::to_string(index) + " does not exist") << std::endl;
+        failed = true;
+    }
     if (failed)
         return -1;
     else
