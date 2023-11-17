@@ -141,7 +141,7 @@ std::vector<std::function<bool()>> tests
     TestConvert,
 };
    
-int Test(size_t index = -1)
+int Test(size_t index)
 {
     int failed = false;
     if (index < tests.size())

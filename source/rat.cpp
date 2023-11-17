@@ -57,6 +57,11 @@ vector<Token> Tokenize(string text)
             buffer.clear();
         }
     }
+    if (!buffer.empty()) // add last token
+    {
+        tokens.push_back(AddToken(buffer));
+        buffer.clear();
+    }
     return tokens;
 }
 
@@ -121,11 +126,14 @@ string Convert(vector<Token> tokens)
 
     for (Token token : tokens)
     {
-        if (token.type == Type::_keyword && token.value == "exit")
+        if (token.type == Type::_keyword)
         {
-            output += "mov rax, 60\n";
-            output += "mov rdi, " + token.right->value + '\n';
-            output += "syscall\n";
+            if (token.value == "exit" && token.right->type == Type::_number)
+            {
+                output += "mov rax, 60\n";
+                output += "mov rdi, " + token.right->value + '\n';
+                output += "syscall\n";
+            }
         }
     }
     return output;
@@ -165,5 +173,10 @@ string Compile(string text)
     ///
 
     string output = Convert(trees); // convert to assembly code
+
+    /// debug
+    cout << output;
+    ///
+    
     return output;
 }
