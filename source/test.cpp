@@ -69,6 +69,26 @@ bool TestTokenize()
     return CompareLines(result, expected);
 }
 
+bool TestTokenize2()
+{
+    std::string text = "exit 13* 3 ==1\n;;\n"; // test "=="
+    // expected values:
+    std::vector<Token> expected = {
+        AddToken("exit"),
+        AddToken("13"),
+        AddToken("*"),
+        AddToken("3"),
+        AddToken("=="),
+        AddToken("1"),
+        AddToken("\n"),
+        AddToken(";"),
+        AddToken(";"),
+        AddToken("\n"),
+    };
+    std::vector<Token> result = Tokenize(text);
+    return CompareLines(result, expected);
+}
+
 bool TestDivide()
 {
     std::vector<Token> tokens = { // test tokens
@@ -136,6 +156,7 @@ std::vector<std::function<bool()>> tests
 {
     TestAddToken,
     TestTokenize,
+    TestTokenize2,
     TestDivide,
     TestParse,
     TestConvert,

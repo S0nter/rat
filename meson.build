@@ -26,6 +26,7 @@ rat = executable('rat',
 tests = [
     'AddToken test 1',
     'Tokenize test 1',
+    'Tokenize test 2',
     'Divide test 1',
     'Parse test 1',
     'Convert test 1',
