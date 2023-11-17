@@ -9,7 +9,7 @@
 
 static const char USAGE[] =
 R"(
-    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--test-all | --test ID]]
+    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--testall | --test ID]]
         rat FILE -o FILE
         rat --testall
         rat --test ID
@@ -19,7 +19,7 @@ R"(
     Options:
         --help -h   Show help screen
         --version   Show version
-        --test-all  Run all tests
+        --testall   Run all tests
         --test ID   Run test ID
         FILE        Compile .rat file
         -o FILE     Output file
@@ -68,7 +68,7 @@ int main(int argc, char** argv)
     {
         if(string(arg.first) == "--test" && arg.second.isString())
             return Test(stoi(arg.second.asString()));
-        else if (string(arg.first) == "--test-all" && arg.second.asBool())
+        else if (string(arg.first) == "--testall" && arg.second.asBool())
             return TestAll();
         else if (string(arg.first) == "FILE" && arg.second.isString())
             inputFile = arg.second.asString();
