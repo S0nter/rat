@@ -9,22 +9,20 @@
 
 static const char USAGE[] =
 R"(
-
-    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--tests | --test NUM]]
-      
-      rat FILE -o FILE
-      rat --tests
-      rat --test NUM
-      rat -h | --help
-      rat --version
-
+    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--testall | --test ID]]
+        rat FILE -o FILE
+        rat --testall
+        rat --test ID
+        rat -h | --help
+        rat --version
 
     Options:
-      -h --help   Show this screen
-      --version   Show version
-      --test ID   Run test ID if ID is bigger then then amount of tests runs all
-      FILE        Input file
-      -o FILE     Output file
+        --help -h   Show help screen
+        --version   Show version
+        --testall   Run all tests
+        --test ID   Run test ID
+        FILE        Compile .rat file
+        -o FILE     Output file
 )";
 
 string ReadFile(string name)
@@ -59,26 +57,29 @@ void WriteFile(string name, string content)
 
 int main(int argc, char** argv)
 {
-    std::string input_file = "";
-    std::string output_file = "";
+    std::string inputFile = "";
+    std::string outputFile = "";
     
     // parser for command line arguments
     std::map<std::string, docopt::value> args
-    = docopt::docopt(USAGE,
-                     { argv + 1, argv + argc },
-                     true,      // show help if requested
-                     "0.0.1");  // version string
+    = docopt::docopt(USAGE, { argv + 1, argv + argc }, true, "0.0.1");
     
-    for(auto const& arg : args) {
-        if (string (arg.first) == "--test" && arg.second.isString()) return Test(stoi(arg.second.asString()));
-        else if (string (arg.first) == "FILE" && arg.second.isString()) input_file = arg.second.asString();
-        else if (string (arg.first) == "-o" && arg.second.isString()) output_file = arg.second.asString();
+    for(auto const& arg : args)
+    {
+        if(string (arg.first) == "--test" && arg.second.isString())
+            return Test(stoi(arg.second.asString()));
+        else if(string (arg.first) == "--testall" && arg.second.asBool())
+            return TestAll();
+        else if(string(arg.first) == "FILE" && arg.second.isString())
+            inputFile = arg.second.asString();
+        else if(string(arg.first) == "-o" && arg.second.isString())
+            outputFile = arg.second.asString();
     }
 
-    std::cout << "Opening " << input_file << std::endl;
-    string content = ReadFile(input_file);
+    std::cout << "Opening " << inputFile << std::endl;
+    string content = ReadFile(inputFile);
 
     string output = Compile(content);
-    WriteFile(output_file, output);
+    WriteFile(outputFile, output);
     return 0;
 }

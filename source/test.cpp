@@ -1,6 +1,6 @@
 #include <iostream>
 #include <vector>
-// FIXME: #include <bits/stdc++.h>
+#include <functional>
 #include <string>
 
 #include "basic_functions.h"
@@ -64,7 +64,6 @@ bool TestTokenize()
         AddToken("60"),
         AddToken("+"),
         AddToken("9"),
-        AddToken("\n"),
     };
     std::vector<Token> result = Tokenize(text);
     return CompareLines(result, expected);
@@ -142,23 +141,10 @@ std::vector<std::function<bool()>> tests
     TestConvert,
 };
    
-int Test(int index = -1)
+int Test(size_t index = -1)
 {
-    bool failed = false;
-    if (index < 0) // test all
-    {
-        for (size_t i = 0 ; i < tests.size(); i++) 
-        {
-            if (tests.at(i)()) 
-                std::cout << Green("Test " + std::to_string(i) + " passed") << std::endl;
-            else
-            {
-                std::cout << Red("Test " + std::to_string(i) + " failed") << std::endl;
-                failed = true;
-            }
-        }
-    }
-    else if (index < int(tests.size())) // test index
+    int failed = false;
+    if (index < tests.size())
     {
         if (tests.at(index)())
             std::cout << Green("Test " + std::to_string(index) + " passed") << std::endl;
@@ -173,8 +159,22 @@ int Test(int index = -1)
         std::cout << Red("Test " + std::to_string(index) + " does not exist") << std::endl;
         failed = true;
     }
-    if (failed)
-        return -1;
-    else
-        return 0;
+    return failed;
+}
+
+int TestAll()
+{
+    int failed = false;
+    for (size_t i = 0; i < tests.size(); i++) 
+    {
+        if (tests.at(i)()) 
+            std::cout << Green("Test " + std::to_string(i) + " passed") << std::endl;
+        else
+        {
+            std::cout << Red("Test " + std::to_string(i) + " failed") << std::endl;
+            failed = true;
+            return failed;
+        }
+    }
+    return failed;
 }

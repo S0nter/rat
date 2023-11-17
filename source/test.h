@@ -1,3 +1,5 @@
 #pragma once
 
-int Test(int index);
+int Test(size_t index);
+
+int TestAll();
