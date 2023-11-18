@@ -158,25 +158,39 @@ void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
 
 string Compile(string text)
 {
+// TOKENIZE
     vector<Token> tokens = Tokenize(text); // get all tokens
     vector<vector<Token>> lines = Divide(tokens); // divide them on lines
 
+    // debug
+    cout << endl << Green("Tokenizer:") << endl;
+    for (vector<Token> line : lines)
+    {
+        for (Token token : line)
+            cout << "[" << token.value << ": " << token.type << "]";
+        cout << endl;
+    }
+    cout << endl;
+
+// PARSE
     vector<Token> trees;
     for (size_t i = 0; i < lines.size(); i++)
-    {
         trees.push_back(*Parse(&lines.at(i), 0, lines.at(i).size() - 1)); // convert each line to tree
-    }
     
-    /// debug
+    // debug
+    cout << Green("Parser:") << endl;
     for (Token token : trees)
+    {
         PrintTree("", &token, false);
-    ///
+        cout << endl;
+    }
 
+// CONVERT
     string output = Convert(trees); // convert to assembly code
 
-    /// debug
-    cout << output;
-    ///
+    // debug
+    cout << Green("Converter:") << endl;
+    cout << output << endl;
     
     return output;
 }

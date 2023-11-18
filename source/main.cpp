@@ -9,20 +9,19 @@
 
 static const char USAGE[] =
 R"(
-    Usage:  rat [FILE -o FILE | [-h | --help] | [--version] | [--testall | --test ID]]
-        rat FILE -o FILE
+    Usage:
+        rat IN -o OUT
         rat --testall
         rat --test ID
-        rat -h | --help
         rat --version
+        rat -h | --help
 
     Options:
         --help -h   Show help screen
         --version   Show version
         --testall   Run all tests
         --test ID   Run test ID
-        FILE        Compile .rat file
-        -o FILE     Output file
+        IN -o OUT   Compile IN file and put in OUT
 )";
 
 string ReadFile(string name)
@@ -70,7 +69,7 @@ int main(int argc, char** argv)
             return Test(stoi(arg.second.asString()));
         else if (string(arg.first) == "--testall" && arg.second.asBool())
             return TestAll();
-        else if (string(arg.first) == "FILE" && arg.second.isString())
+        else if (string(arg.first) == "IN" && arg.second.isString())
             inputFile = arg.second.asString();
         else if (string(arg.first) == "-o" && arg.second.isString())
             outputFile = arg.second.asString();
