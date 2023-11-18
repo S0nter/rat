@@ -148,7 +148,7 @@ void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
         std::cout << "|__";
 
         // print the value of the node
-        std::cout << "[" << node->type << "; " << node->value << "]" << std::endl;
+        std::cout << "[" << node->value << "]" << std::endl;
 
         // enter the next tree level - left and right branch
         PrintTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
