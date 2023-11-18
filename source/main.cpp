@@ -11,6 +11,7 @@ static const char USAGE[] =
 R"(
     Usage:
         rat IN -o OUT
+        rat --run INP
         rat --testall
         rat --test ID
         rat --version
@@ -19,6 +20,7 @@ R"(
     Options:
         --help -h   Show help screen
         --version   Show version
+        --run INP   Compile input
         --testall   Run all tests
         --test ID   Run test ID
         IN          Input file (.rat)
@@ -70,6 +72,11 @@ int main(int argc, char** argv)
             return Test(stoi(arg.second.asString()));
         else if (string(arg.first) == "--testall" && arg.second.asBool())
             return TestAll();
+        else if (string(arg.first) == "--run" && arg.second.isString())
+        {
+            Compile(arg.second.asString());
+            return 0;
+        }
         else if (string(arg.first) == "IN" && arg.second.isString())
             inputFile = arg.second.asString();
         else if (string(arg.first) == "-o" && arg.second.isString())

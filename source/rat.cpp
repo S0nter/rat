@@ -167,7 +167,7 @@ string Compile(string text)
     for (vector<Token> line : lines)
     {
         for (Token token : line)
-            cout << "[" << token.value << ": " << token.type << "]";
+            cout << "[" << token.value << "]";
         cout << endl;
     }
     cout << endl;
