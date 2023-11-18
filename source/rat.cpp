@@ -1,11 +1,12 @@
 #include <string>
 #include <iostream> // DEBUG
 #include <vector>
+
 #include "basic_functions.h"
 #include "rat.h"
-#include "Tokenizer.h"
-#include "Parser.h"
-#include "Converter.h"
+#include "tokenizer.h"
+#include "parser.h"
+#include "converter.h"
 using namespace std;
 
 string Compile(string text)

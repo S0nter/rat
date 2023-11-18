@@ -5,9 +5,9 @@
 
 #include "rat.h"
 #include "basic_functions.h"
-#include "Tokenizer.h"
-#include "Parser.h"
-#include "Converter.h"
+#include "tokenizer.h"
+#include "parser.h"
+#include "converter.h"
 
 bool CompareTokens(Token token1, Token token2)
 {

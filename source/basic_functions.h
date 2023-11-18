@@ -1,4 +1,5 @@
 #pragma once
+
 #include <string>
 
 std::string Red(std::string text);

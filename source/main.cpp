@@ -3,7 +3,7 @@
 #include <cstring>
 #include "lib/docopt/docopt.h"
 
-#include "./rat.cpp"
+#include "rat.cpp"
 #include "basic_functions.h"
 #include "test.h"
 
