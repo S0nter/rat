@@ -14,14 +14,15 @@ R"(
         rat --testall
         rat --test ID
         rat --version
-        rat -h | --help
+        rat -h|--help
 
     Options:
         --help -h   Show help screen
         --version   Show version
         --testall   Run all tests
         --test ID   Run test ID
-        IN -o OUT   Compile IN file and put in OUT
+        IN          Input file (.rat)
+        -o OUT      Output file (.asm)
 )";
 
 string ReadFile(string name)
