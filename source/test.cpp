@@ -3,8 +3,11 @@
 #include <functional>
 #include <string>
 
-#include "basic_functions.h"
 #include "rat.h"
+#include "basic_functions.h"
+#include "Tokenizer.h"
+#include "Parser.h"
+#include "Converter.h"
 
 bool CompareTokens(Token token1, Token token2)
 {

@@ -1,31 +1,5 @@
 #include "basic_functions.h"
-
 #include <string>
-#include <iostream>
-
-
-bool IsOperator(std::string value)
-{
-    if (value == "+" ||
-        value == "-" ||
-        value == "*" ||
-        value == "/")
-        return true;
-    return false;
-}
-
-bool IsNumber(std::string value)
-{
-    bool result = false;
-    for (char character : value)
-    {
-        if (!isdigit(character))
-            return false;
-        else
-            result = true;
-    }
-    return result;
-}
 
 std::string Red(std::string text)
 {
