@@ -3,9 +3,15 @@
 #include <vector>
 
 #include "basic_functions.h"
-#include "./rat.h"
+#include "rat.h"
 
 using namespace std;
+
+void Error(string text)
+{
+    cout << Red("Error: ") << text << endl;
+    exit(1);
+}
 
 Token AddToken(string value)
 {
@@ -56,6 +62,7 @@ vector<Token> Tokenize(string text)
             tokens.push_back(AddToken(buffer));
             buffer.clear();
         }
+        
     }
     if (!buffer.empty()) // add last token
     {
@@ -121,18 +128,51 @@ string Convert(vector<Token> tokens)
 {
     string output;
     output += "section .text\n";
-    output += "global _start\n";
+    output += "global _start\n\n";
     output += "_start:\n";
 
     for (Token token : tokens)
     {
         if (token.type == Type::_keyword)
         {
-            if (token.value == "exit" && token.right->type == Type::_number)
+            if (token.value == "exit")
             {
-                output += "mov rax, 60\n";
-                output += "mov rdi, " + token.right->value + '\n';
-                output += "syscall\n";
+                Token *right = token.right;
+                if (right == nullptr)
+                    Error("exit needs an argument");
+                else if (right->type == Type::_number)
+                {
+                    output += "    mov rdi, " + right->value + '\n';
+                }
+                else if (right->type == Type::_operator)
+                {
+                    if (right->value == "+")
+                    {
+                        if (right->left == nullptr || right->right == nullptr)
+                            Error("invalid operator arguments");
+                        output += "    mov rdi, " + right->left->value + '\n';
+                        output += "    add rdi, " + right->right->value + '\n';
+                    }
+                    if (right->value == "-")
+                    {
+                        if (right->left == nullptr || right->right == nullptr)
+                            Error("invalid operator arguments");
+                        output += "    mov rdi, " + right->left->value + '\n';
+                        output += "    sub rdi, " + right->right->value + '\n';
+                    }
+                    if (right->value == "*")
+                    {
+                        if (right->left == nullptr || right->right == nullptr)
+                            Error("invalid operator arguments");
+                        output += "    mov rdi, " + right->left->value + '\n';
+                        output += "    imul rdi, " + right->right->value + '\n';
+                    }
+                }
+                else
+                    Error("exit needs an argument of type number");
+                
+                output += "    mov rax, 60\n";
+                output += "    syscall\n";
             }
         }
     }
@@ -159,11 +199,12 @@ void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
 string Compile(string text)
 {
 // TOKENIZE
+    cout << endl << Green("Tokenizer:") << endl;
+
     vector<Token> tokens = Tokenize(text); // get all tokens
     vector<vector<Token>> lines = Divide(tokens); // divide them on lines
 
     // debug
-    cout << endl << Green("Tokenizer:") << endl;
     for (vector<Token> line : lines)
     {
         for (Token token : line)
@@ -173,12 +214,13 @@ string Compile(string text)
     cout << endl;
 
 // PARSE
+    cout << Green("Parser:") << endl;
+
     vector<Token> trees;
     for (size_t i = 0; i < lines.size(); i++)
         trees.push_back(*Parse(&lines.at(i), 0, lines.at(i).size() - 1)); // convert each line to tree
     
     // debug
-    cout << Green("Parser:") << endl;
     for (Token token : trees)
     {
         PrintTree("", &token, false);
@@ -186,10 +228,11 @@ string Compile(string text)
     }
 
 // CONVERT
+    cout << Green("Converter:") << endl;
+    
     string output = Convert(trees); // convert to assembly code
 
     // debug
-    cout << Green("Converter:") << endl;
     cout << output << endl;
     
     return output;
