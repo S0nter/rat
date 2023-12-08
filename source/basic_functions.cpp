@@ -1,7 +1,9 @@
 #include "basic_functions.h"
 
 #include <string>
+#include <vector>
 #include <iostream>
+#include <algorithm>  // std::find
 
 
 bool IsOperator(std::string value)
@@ -10,6 +12,25 @@ bool IsOperator(std::string value)
         value == "-" ||
         value == "*" ||
         value == "/")
+        return true;
+    return false;
+}
+
+bool IsComparator(std::string value)
+{
+    std::vector<std::string> comparators = {
+        "==",
+        ">=",
+        "<=",
+        ">",
+        "<",
+        "||",
+        "&&",
+        "or",
+        "and",
+    };
+    // if value in comparators
+    if (std::find(comparators.begin(), comparators.end(), value) != comparators.end())
         return true;
     return false;
 }
@@ -40,4 +61,10 @@ std::string Green(std::string text)
 std::string Quote(std::string str)
 {
     return "\"" + str + "\"";
+}
+
+void Error(std::string text)
+{
+    std::cout << Red("Error: ") << text << std::endl;
+    exit(1);
 }
