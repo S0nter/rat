@@ -5,7 +5,7 @@
 
 
 bool IsOperator(std::string value);
-bool IsComparator(std::string value);
+bool IsOperatorCharacter(char value);
 bool IsNumber(std::string value);
 
 std::string Red(std::string text);

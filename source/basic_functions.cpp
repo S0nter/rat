@@ -5,20 +5,17 @@
 #include <iostream>
 #include <algorithm>  // std::find
 
-
 bool IsOperator(std::string value)
 {
-    if (value == "+" ||
-        value == "-" ||
-        value == "*" ||
-        value == "/")
-        return true;
-    return false;
-}
-
-bool IsComparator(std::string value)
-{
     std::vector<std::string> comparators = {
+        "+",
+        "-",
+        "*",
+        "/",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
         "==",
         ">=",
         "<=",
@@ -33,6 +30,18 @@ bool IsComparator(std::string value)
     if (std::find(comparators.begin(), comparators.end(), value) != comparators.end())
         return true;
     return false;
+}
+
+bool IsOperatorCharacter(char value)
+{
+    switch (value)
+    {
+        case '+' || '-' || '*' || '/' || '=' || '<' || '>':
+            return true;
+        
+        default:
+            return false;
+    }
 }
 
 bool IsNumber(std::string value)
