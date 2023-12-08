@@ -71,7 +71,7 @@ bool TestTokenize()
 
 bool TestTokenize2()
 {
-    std::string text = "exit 13* 3 ==1\n;;\n"; // test "=="
+    std::string text = "exit 13* 3==1\n;;\n"; // test "=="
     // expected values:
     std::vector<Token> expected = {
         AddToken("exit"),
@@ -194,7 +194,6 @@ int TestAll()
         {
             std::cout << Red("Test " + std::to_string(i) + " failed") << std::endl;
             failed = true;
-            return failed;
         }
     }
     return failed;

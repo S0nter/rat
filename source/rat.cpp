@@ -7,11 +7,6 @@
 
 using namespace std;
 
-void Error(string text)
-{
-    cout << Red("Error: ") << text << endl;
-    exit(1);
-}
 
 Token AddToken(string value)
 {
@@ -21,6 +16,11 @@ Token AddToken(string value)
     if (IsOperator(value))
     {
         token.type = Type::_operator;
+        token.priority = 2;
+    }
+    else if (IsComparator(value))
+    {
+        token.type = Type::_comparator;
         token.priority = 2;
     }
     else if (value == "exit")
@@ -46,8 +46,26 @@ vector<Token> Tokenize(string text)
     string buffer;
     for (char character : text)
     {
-        if (std::isalnum(character)) // check weather character is alpha-numeric (a, b, c, d... or 1, 2, 3, 4...)
+        // check weather character is alpha-numeric (a, b, c, d... or 1, 2, 3, 4...)
+        if (std::isalnum(character) && 
+            // if buffer empty or (if it's not) last char is alpha-numeric
+           (buffer.empty() || std::isalnum(buffer[buffer.length()-1])))
         {
+            buffer.push_back(character);
+            continue;
+        }
+        else if (character == '|' || // check for &&, ||, ==, ... 
+                 character == '&' ||
+                 character == '=' ||
+                 character == '<' || 
+                 character == '>')
+        {
+            // clear buffer in case like "5==" ("5" should be added before handling "==")
+            if (!buffer.empty() && std::isalnum(buffer[buffer.length()-1]))
+            {
+                tokens.push_back(AddToken(buffer));
+                buffer.clear();
+            }
             buffer.push_back(character);
             continue;
         }

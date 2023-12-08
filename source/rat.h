@@ -2,6 +2,7 @@
 #include <string>
 #include <vector>
 
+
 enum Type
 {
     _none,
@@ -9,6 +10,7 @@ enum Type
     _number,
     _operator,
     _linebreak,
+    _comparator,
 };
 
 struct Token
