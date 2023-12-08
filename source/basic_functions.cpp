@@ -34,14 +34,13 @@ bool IsOperator(std::string value)
 
 bool IsOperatorCharacter(char value)
 {
-    switch (value)
-    {
-        case '+' || '-' || '*' || '/' || '=' || '<' || '>':
-            return true;
-        
-        default:
-            return false;
-    }
+    if (value == '+' || value == '-' ||
+        value == '*' || value == '/' ||
+        value == '=' || value == '<' || value == '>')
+        return true;
+    else
+        return false;
+
 }
 
 bool IsNumber(std::string value)
