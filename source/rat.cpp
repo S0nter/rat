@@ -18,7 +18,7 @@ Token AddToken(string value)
         token.type = Type::_operator;
         token.priority = 2;
     }
-    else if (IsComparator(value))
+    else if (IsOperator(value))
     {
         token.type = Type::_comparator;
         token.priority = 2;
@@ -46,41 +46,57 @@ vector<Token> Tokenize(string text)
     string buffer;
     for (char character : text)
     {
-        // check weather character is alpha-numeric (a, b, c, d... or 1, 2, 3, 4...)
-        if (std::isalnum(character) && 
-            // if buffer empty or (if it's not) last char is alpha-numeric
-           (buffer.empty() || std::isalnum(buffer[buffer.length()-1])))
+        // // check weather character is alpha-numeric (a, b, c, d... or 1, 2, 3, 4...)
+        // if (std::isalnum(character) && 
+        //     // if buffer empty or (if it's not) last char is alpha-numeric
+        //    (buffer.empty() || std::isalnum(buffer[buffer.length()-1])))
+        // {
+        //     buffer.push_back(character);
+        //     continue;
+        // }
+        // else if (character == '|' || // check for &&, ||, ==, ... 
+        //          character == '&' ||
+        //          character == '=' ||
+        //          character == '<' || 
+        //          character == '>')
+        // {
+        //     // clear buffer in case like "5==" ("5" should be added before handling "==")
+        //     if (!buffer.empty() && std::isalnum(buffer[buffer.length()-1]))
+        //     {
+        //         tokens.push_back(AddToken(buffer));
+        //         buffer.clear();
+        //     }
+        //     buffer.push_back(character);
+        //     continue;
+        // }
+        // else if (!buffer.empty()) // convert buffer
+        // {
+        //     tokens.push_back(AddToken(buffer));
+        //     buffer.clear();
+        // }
+
+        if (!buffer.empty())
         {
-            buffer.push_back(character);
-            continue;
-        }
-        else if (character == '|' || // check for &&, ||, ==, ... 
-                 character == '&' ||
-                 character == '=' ||
-                 character == '<' || 
-                 character == '>')
-        {
-            // clear buffer in case like "5==" ("5" should be added before handling "==")
-            if (!buffer.empty() && std::isalnum(buffer[buffer.length()-1]))
+            if (isalnum(character) && isalnum(buffer.at(0)))
+            {
+                buffer.push_back(character);
+                continue;
+            }
+            else if (IsOperatorCharacter(character) && IsOperatorCharacter(buffer.at(0)))
+            {
+                buffer.push_back(character);
+                continue;
+            }
+            else
             {
                 tokens.push_back(AddToken(buffer));
                 buffer.clear();
+                if (character != ' ')
+                    buffer.push_back(character);
             }
+        }
+        else if (character != ' ')
             buffer.push_back(character);
-            continue;
-        }
-        else if (!buffer.empty()) // convert buffer
-        {
-            tokens.push_back(AddToken(buffer));
-            buffer.clear();
-        }
-        if (character != ' ')
-        {
-            buffer.push_back(character);
-            tokens.push_back(AddToken(buffer));
-            buffer.clear();
-        }
-        
     }
     if (!buffer.empty()) // add last token
     {
