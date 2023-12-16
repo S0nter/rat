@@ -44,11 +44,12 @@ vector<Token> Tokenize(string text)
 {
     vector<Token> tokens;
     string buffer;
+
     for (char character : text)
     {
         if (!buffer.empty())
         {
-            if (isalnum(character) && isalnum(buffer.at(0)))
+            if (isalnum(character) && isalpha(buffer.at(0)))
             {
                 buffer.push_back(character);
                 continue;
@@ -74,6 +75,7 @@ vector<Token> Tokenize(string text)
         tokens.push_back(AddToken(buffer));
         buffer.clear();
     }
+
     return tokens;
 }
 
@@ -129,56 +131,47 @@ Token *Parse(vector<Token> *tokens, int from, int to) // converts line to token 
     return token;
 }
 
-string Convert(vector<Token> tokens)
+string Convert(Token* token)
 {
     string output;
-    output += "section .text\n";
-    output += "global _start\n\n";
-    output += "_start:\n";
-
-    for (Token token : tokens)
-    {
-        if (token.type == Type::_keyword)
+    
+    if (token->type == Type::_operator)
+    {   
+        if (token->left != nullptr && token->right != nullptr)
         {
-            if (token.value == "exit")
+            if (token->left->type == Type::_operator)
             {
-                Token *right = token.right;
-                if (right == nullptr)
-                    Error("exit needs an argument");
-                else if (right->type == Type::_number)
-                {
-                    output += "    mov rdi, " + right->value + '\n';
-                }
-                else if (right->type == Type::_operator)
-                {
-                    if (right->value == "+")
-                    {
-                        if (right->left == nullptr || right->right == nullptr)
-                            Error("invalid operator arguments");
-                        output += "    mov rdi, " + right->left->value + '\n';
-                        output += "    add rdi, " + right->right->value + '\n';
-                    }
-                    if (right->value == "-")
-                    {
-                        if (right->left == nullptr || right->right == nullptr)
-                            Error("invalid operator arguments");
-                        output += "    mov rdi, " + right->left->value + '\n';
-                        output += "    sub rdi, " + right->right->value + '\n';
-                    }
-                    if (right->value == "*")
-                    {
-                        if (right->left == nullptr || right->right == nullptr)
-                            Error("invalid operator arguments");
-                        output += "    mov rdi, " + right->left->value + '\n';
-                        output += "    imul rdi, " + right->right->value + '\n';
-                    }
-                }
-                else
-                    Error("exit needs an argument of type number");
-                
-                output += "    mov rax, 60\n";
-                output += "    syscall\n";
+                output += Convert(token->left);
+                output += "mov rax, rbx\n";
             }
+            else if (token->left->type == Type::_number)
+            {
+                output += "mov rbx, " + token->left->value + "\n";
+            }
+            
+            if (token->right->type == Type::_operator)
+            {
+                output += Convert(token->right);
+            }
+            else if (token->right->type == Type::_number)
+            {
+                output += "mov rax, " + token->left->value + "\n";
+            }
+        }
+        else
+            Error("invalid operator syntax");
+
+        if (token->value == "+")
+        {
+            output += "add rbx, rax\n";
+        }
+        if (token->value == "-")
+        {
+            output += "sub rbx, rax\n";
+        }
+        if (token->value == "*")
+        {
+            output += "imul rbx, rax\n";
         }
     }
     return output;
@@ -235,7 +228,10 @@ string Compile(string text)
 // CONVERT
     cout << Green("Converter:") << endl;
     
-    string output = Convert(trees); // convert to assembly code
+    string output;
+    
+    for (Token token : trees)
+        output += Convert(&token); // convert to assembly code
 
     // debug
     cout << output << endl;
