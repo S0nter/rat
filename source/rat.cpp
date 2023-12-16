@@ -16,12 +16,7 @@ Token AddToken(string value)
     if (IsOperator(value))
     {
         token.type = Type::_operator;
-        token.priority = 2;
-    }
-    else if (IsOperator(value))
-    {
-        token.type = Type::_comparator;
-        token.priority = 2;
+        token.priority = GetOperatorPriority(value);
     }
     else if (value == "exit")
     {
@@ -50,6 +45,11 @@ vector<Token> Tokenize(string text)
         if (!buffer.empty())
         {
             if (isalnum(character) && isalpha(buffer.at(0)))
+            {
+                buffer.push_back(character);
+                continue;
+            }
+            if (isdigit(character) && isdigit(buffer.at(0)))
             {
                 buffer.push_back(character);
                 continue;
