@@ -12,8 +12,7 @@ project(
 
 src = [
     'source/main.cpp',
-    'source/basic_functions.cpp',
-    'source/test.cpp',
+    'source/functions.cpp',
 ]
 
 docopt = library('docopt', 'lib/docopt/docopt.cpp')
