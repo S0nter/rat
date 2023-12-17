@@ -4,6 +4,7 @@
 #include "lib/docopt/docopt.h"
 
 #include "rat.cpp"
+#include "test.h"
 
 static const char USAGE[] =
 R"(
@@ -66,7 +67,11 @@ int main(int argc, char** argv)
     
     for (auto const& arg : args)
     {
-        if (string(arg.first) == "--run" && arg.second.isString())
+        if(string(arg.first) == "--test" && arg.second.isString())
+            return Test(stoi(arg.second.asString()));
+        else if (string(arg.first) == "--testall" && arg.second.asBool())
+            return TestAll();
+        else if (string(arg.first) == "--run" && arg.second.isString())
         {
             Compile(arg.second.asString());
             return 0;

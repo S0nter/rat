@@ -116,7 +116,6 @@ vector<vector<Token>> Tokenize(string text)
                 buffer.push_back(character);
                 continue;
             }
-            
             else
             {
                 tokens.push_back(AddToken(buffer));
