@@ -124,7 +124,8 @@ vector<vector<Token>> Tokenize(string text)
         }
         if (character == '\n' || character == ';')
         {
-            lines.push_back(tokens);
+            if (!tokens.empty())
+                lines.push_back(tokens);
             tokens.clear();
         }
         else if (character != ' ')
@@ -174,36 +175,30 @@ string Convert(Token* token)
             if (token->left->type == Type::_operator)
             {
                 output += Convert(token->left);
-                output += "mov rax, rbx\n";
+                // output += "mov rax, rbx\n";
             }
             else if (token->left->type == Type::_number)
-            {
-                output += "mov rbx, " + token->left->value + "\n";
-            }
+                output += "mov rax, " + token->left->value + "\n";
             
             if (token->right->type == Type::_operator)
-            {
                 output += Convert(token->right);
-            }
             else if (token->right->type == Type::_number)
-            {
-                output += "mov rax, " + token->left->value + "\n";
-            }
+                output += "mov rbx, " + token->right->value + "\n";
         }
         else
             Error("invalid operator syntax");
 
         if (token->value == "+")
         {
-            output += "add rbx, rax\n";
+            output += "add rax, rbx\n";
         }
         if (token->value == "-")
         {
-            output += "sub rbx, rax\n";
+            output += "sub rax, rbx\n";
         }
         if (token->value == "*")
         {
-            output += "imul rbx, rax\n";
+            output += "imul rax, rbx\n";
         }
     }
     return output;
