@@ -1,12 +1,80 @@
-#include <string>
 #include <iostream> // DEBUG
+#include <string>
 #include <vector>
+#include <algorithm>
 
-#include "basic_functions.h"
+#include "functions.h"
 #include "rat.h"
 
 using namespace std;
 
+bool IsOperator(std::string value)
+{
+    std::vector<std::string> operators = {
+        "+",
+        "-",
+        "*",
+        "/",
+        "+=",
+        "-=",
+        "*=",
+        "/=",
+        "==",
+        ">",
+        ">=",
+        "<",
+        "<=",
+        "||",
+        "&&",
+    };
+    // if value in operators
+    if (std::find(operators.begin(), operators.end(), value) != operators.end())
+        return true;
+    return false;
+}
+
+bool IsOperatorCharacter(char value)
+{
+    std::vector<char> characters = {
+        '+',
+        '-',
+        '*',
+        '/',
+        '=',
+        '>',
+        '<',
+        '|',
+        '&',
+    };
+    // if value in characters
+    if (std::find(characters.begin(), characters.end(), value) != characters.end())
+        return true;
+    return false;
+}
+
+int GetOperatorPriority(std::string value)
+{
+    if (value == "*" || value == "/")
+        return 1;
+    else if (value == "+" || value == "-")
+        return 2;
+    else if (value == "=")
+        return 3;
+    
+    return 1;
+}
+
+bool IsNumber(std::string value)
+{
+    if (value.length() == 0)
+        return false;
+    for (char character : value)
+    {
+        if (!isdigit(character))
+            return false;
+    }
+    return true;
+}
 
 Token AddToken(string value)
 {
@@ -21,22 +89,19 @@ Token AddToken(string value)
     else if (value == "exit")
     {
         token.type = Type::_keyword;
-        token.priority = 3;
-    }
-    else if (value == ";" || value == "\n")
-    {
-        token.type = Type::_linebreak;
+        token.priority = 4;
     }
     else if (IsNumber(value))
     {
         token.type = Type::_number;
-        token.priority = 1;
+        token.priority = 0;
     }
     return token;
 }
 
-vector<Token> Tokenize(string text)
+vector<vector<Token>> Tokenize(string text)
 {
+    vector<vector<Token>> lines;
     vector<Token> tokens;
     string buffer;
 
@@ -44,63 +109,31 @@ vector<Token> Tokenize(string text)
     {
         if (!buffer.empty())
         {
-            if (isalnum(character) && isalpha(buffer.at(0)))
+            if ((isalnum(character) && isalpha(buffer.at(0))) || // keyword
+                (isdigit(character) && isdigit(buffer.at(0))) || // number
+                (IsOperatorCharacter(character) && IsOperatorCharacter(buffer.at(0)))) // operator
             {
                 buffer.push_back(character);
                 continue;
             }
-            if (isdigit(character) && isdigit(buffer.at(0)))
-            {
-                buffer.push_back(character);
-                continue;
-            }
-            else if (IsOperatorCharacter(character) && IsOperatorCharacter(buffer.at(0)))
-            {
-                buffer.push_back(character);
-                continue;
-            }
+            
             else
             {
                 tokens.push_back(AddToken(buffer));
                 buffer.clear();
-                if (character != ' ')
-                    buffer.push_back(character);
             }
+        }
+        if (character == '\n' || character == ';')
+        {
+            lines.push_back(tokens);
+            tokens.clear();
         }
         else if (character != ' ')
             buffer.push_back(character);
     }
     if (!buffer.empty()) // add last token
-    {
         tokens.push_back(AddToken(buffer));
-        buffer.clear();
-    }
 
-    return tokens;
-}
-
-vector<vector<Token>> Divide(vector<Token> tokens) // divides vector of tokens on lines by linebreaks
-{
-    vector<vector<Token>> lines;
-    vector<Token> line;
-    for (Token token : tokens)
-    {
-        if (token.type == Type::_linebreak)
-        {
-            if (!line.empty()) // add line
-            {
-                lines.push_back(line);
-                line.clear();
-            }
-        }
-        else
-            line.push_back(token); // append to line
-    }
-    if (!line.empty()) // add last line if not empty
-    {
-        lines.push_back(line);
-        line.clear();
-    }
     return lines;
 }
 
@@ -179,18 +212,18 @@ string Convert(Token* token)
 
 void PrintTree(const std::string& prefix, const Token* node, bool isLeft)
 {
-    if( node != nullptr )
+    if (node != nullptr )
     {
         std::cout << prefix;
 
-        std::cout << "|__";
+        std::cout << "|--";
 
         // print the value of the node
         std::cout << "[" << node->value << "]" << std::endl;
 
         // enter the next tree level - left and right branch
-        PrintTree( prefix + (isLeft ? "│   " : "    "), node->left, true);
-        PrintTree( prefix + (isLeft ? "│   " : "    "), node->right, false);
+        PrintTree( prefix + (isLeft ? "|   " : "    "), node->left, true);
+        PrintTree( prefix + (isLeft ? "|   " : "    "), node->right, false);
     }
 }
 
@@ -199,14 +232,13 @@ string Compile(string text)
 // TOKENIZE
     cout << endl << Green("Tokenizer:") << endl;
 
-    vector<Token> tokens = Tokenize(text); // get all tokens
-    vector<vector<Token>> lines = Divide(tokens); // divide them on lines
+    vector<vector<Token>> lines = Tokenize(text); // get tokens
 
     // debug
     for (vector<Token> line : lines)
     {
         for (Token token : line)
-            cout << "[" << token.value << "]";
+            cout << "[" << token.value << "]" << " ";
         cout << endl;
     }
     cout << endl;
