@@ -172,34 +172,46 @@ string Convert(Token* token)
     {   
         if (token->left != nullptr && token->right != nullptr)
         {
+            string r1;
+            string r2;
+            
             if (token->left->type == Type::_operator)
             {
                 output += Convert(token->left);
-                // output += "mov rax, rbx\n";
+                output += "mov rcx, rax\n";
+                r1 = "rcx";
             }
             else if (token->left->type == Type::_number)
+            {
                 output += "mov rax, " + token->left->value + "\n";
+                r1 = "rax";
+            }
             
             if (token->right->type == Type::_operator)
+            {
                 output += Convert(token->right);
+                output += "mov rdx, rax\n";
+                r2 = "rdx";
+            }
             else if (token->right->type == Type::_number)
+            {
                 output += "mov rbx, " + token->right->value + "\n";
+                r2 = "rbx";
+            }
+            
+            if (token->value == "+")
+                output += "add " + r1 + ", " + r2 + "\n";
+            if (token->value == "-")
+                output += "sub " + r1 + ", " + r2 + "\n";
+            if (token->value == "*")
+                output += "imul " + r1 + ", " + r2 + "\n";
+            if (token->value == "/")
+                output += "idiv " + r1 + ", " + r2 + "\n";
+            
+            output += "mov rax, " + r1 + "\n";
         }
         else
             Error("invalid operator syntax");
-
-        if (token->value == "+")
-        {
-            output += "add rax, rbx\n";
-        }
-        if (token->value == "-")
-        {
-            output += "sub rax, rbx\n";
-        }
-        if (token->value == "*")
-        {
-            output += "imul rax, rbx\n";
-        }
     }
     return output;
 }
